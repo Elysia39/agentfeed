@@ -3,7 +3,7 @@ import json
 import glob
 import subprocess
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from scraper_rss import test_rsshub_latency, fetch_single_feed_preview
 from scraper_sec import fetch_sec_filings_for_ticker
@@ -23,6 +23,7 @@ CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 SOURCES_FILE = os.path.join(CURRENT_DIR, "sources.json")
 HISTORY_FILE = os.path.join(CURRENT_DIR, "feed_history.json")
 HTML_FILE = os.path.join(CURRENT_DIR, "web_admin.html")
+ICON_FILE = os.path.join(CURRENT_DIR, "icon.png")
 import sys
 PYTHON_BIN = sys.executable
 SCRIPT_PATH = os.path.join(CURRENT_DIR, "run_daily_brief.py")
@@ -270,6 +271,13 @@ async def api_test_email(request: Request):
     """
     res = send_email_brief(sample_html, custom_cfg=data)
     return res
+
+@app.get("/api/icon")
+@app.get("/icon.png")
+async def api_get_icon():
+    if os.path.exists(ICON_FILE):
+        return FileResponse(ICON_FILE, media_type="image/png")
+    return JSONResponse(status_code=404, content={"error": "icon not found"})
 
 @app.get("/api/history")
 async def api_get_history():

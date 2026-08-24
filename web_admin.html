@@ -23,8 +23,9 @@
   <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
     <div class="max-w-6xl mx-auto px-4 py-3.5 flex items-center justify-between">
       <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center text-white font-black shadow-md shadow-blue-500/25 tracking-tight text-lg">
-          <i data-lucide="radio" class="w-5 h-5"></i>
+        <div class="relative group cursor-pointer">
+          <img src="/api/icon" onerror="this.src='icon.png'" class="w-10 h-10 rounded-xl shadow-md border border-slate-200 object-cover bg-white" alt="AgentFeed Mascot">
+          <span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full"></span>
         </div>
         <div>
           <div class="flex items-center space-x-2">
@@ -767,7 +768,7 @@
           <div class="flex items-center space-x-2">
             <span id="sched-status-badge" class="text-xs px-2.5 py-0.5 rounded-full font-medium bg-emerald-100 text-emerald-800 flex items-center space-x-1">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
-              <span>调度器就绪</span>
+              <span>调度器运行中</span>
             </span>
             <button onclick="saveScheduleConfig()" class="text-xs bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg font-semibold transition flex items-center space-x-1 shadow-xs">
               <i data-lucide="save" class="w-3.5 h-3.5"></i>
@@ -779,12 +780,12 @@
         <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-6">
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
-            <!-- Column 1: Frequency & Timing -->
+            <!-- Column 1: Frequency & Mode Switcher -->
             <div class="space-y-4">
               <div class="flex items-center justify-between pb-2 border-b border-slate-100">
                 <span class="font-bold text-xs text-slate-900 flex items-center space-x-1.5">
                   <i data-lucide="clock" class="w-4 h-4 text-blue-600"></i>
-                  <span>1. 触发频次与时间</span>
+                  <span>1. 触发模式与周期时刻</span>
                 </span>
                 <label class="relative inline-flex items-center cursor-pointer">
                   <input type="checkbox" id="sched-enabled" checked class="sr-only peer" onchange="updateScheduleUI()">
@@ -792,38 +793,81 @@
                 </label>
               </div>
 
-              <div class="space-y-2">
-                <label class="block text-[11px] font-semibold text-slate-600">预设执行方案</label>
-                <div class="grid grid-cols-2 gap-2">
-                  <button type="button" onclick="setSchedulePreset('evening')" id="preset-btn-evening" class="preset-btn p-2.5 text-left border-2 border-blue-600 bg-blue-50/50 rounded-xl text-xs transition">
-                    <div class="font-bold text-slate-900">🌇 每日晚报 (默认)</div>
-                    <div class="text-[10px] text-slate-500 mt-0.5 font-mono">每天 20:30 执行</div>
-                  </button>
-                  <button type="button" onclick="setSchedulePreset('morning')" id="preset-btn-morning" class="preset-btn p-2.5 text-left border border-slate-200 hover:border-slate-300 rounded-xl text-xs transition">
-                    <div class="font-bold text-slate-900">🌅 每日早报</div>
-                    <div class="text-[10px] text-slate-500 mt-0.5 font-mono">每天 08:30 执行</div>
-                  </button>
-                  <button type="button" onclick="setSchedulePreset('interval_4h')" id="preset-btn-interval_4h" class="preset-btn p-2.5 text-left border border-slate-200 hover:border-slate-300 rounded-xl text-xs transition">
-                    <div class="font-bold text-slate-900">⏱️ 每 4 小时刷新</div>
-                    <div class="text-[10px] text-slate-500 mt-0.5 font-mono">高频跟踪感知</div>
-                  </button>
-                  <button type="button" onclick="setSchedulePreset('custom')" id="preset-btn-custom" class="preset-btn p-2.5 text-left border border-slate-200 hover:border-slate-300 rounded-xl text-xs transition">
-                    <div class="font-bold text-slate-900">⚙️ 自定义时间</div>
-                    <div class="text-[10px] text-slate-500 mt-0.5 font-mono">设定指定时刻</div>
+              <!-- Mode Switcher -->
+              <div class="flex p-1 bg-slate-100 rounded-xl text-xs font-semibold">
+                <button type="button" onclick="setScheduleMode('fixed')" id="tab-sched-fixed" class="flex-1 py-1.5 rounded-lg text-center transition bg-white text-blue-600 shadow-2xs">
+                  🕒 固定多时刻
+                </button>
+                <button type="button" onclick="setScheduleMode('interval')" id="tab-sched-interval" class="flex-1 py-1.5 rounded-lg text-center text-slate-500 hover:text-slate-900 transition">
+                  ⏱️ 周期循环刷新
+                </button>
+                <button type="button" onclick="setScheduleMode('cron')" id="tab-sched-cron" class="flex-1 py-1.5 rounded-lg text-center text-slate-500 hover:text-slate-900 transition">
+                  ⚙️ Cron 专家
+                </button>
+              </div>
+
+              <!-- Mode A: Fixed Multi-Times Panel -->
+              <div id="panel-sched-fixed" class="space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="text-[11px] font-semibold text-slate-600">每日固定时刻列表</span>
+                  <div class="flex space-x-1">
+                    <button type="button" onclick="applyPresetTimes(['08:30', '12:00', '20:30'])" class="text-[10px] bg-blue-50 hover:bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-medium transition">
+                      + 投研三餐制
+                    </button>
+                    <button type="button" onclick="applyPresetTimes(['20:30'])" class="text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded font-medium transition">
+                      + 单次晚报
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Times Tag List -->
+                <div id="sched-times-tags" class="flex flex-wrap gap-1.5 min-h-8 p-2 bg-slate-50 border border-slate-200 rounded-xl">
+                  <!-- Dynamically rendered tags -->
+                </div>
+
+                <!-- Add new time form -->
+                <div class="flex items-center space-x-2">
+                  <input type="time" id="sched-input-time" value="20:30" class="flex-1 text-xs font-mono border border-slate-200 rounded-lg px-2.5 py-1.5 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500">
+                  <button type="button" onclick="addScheduleTime()" class="text-xs bg-slate-900 hover:bg-slate-800 text-white px-3 py-1.5 rounded-lg font-medium transition shrink-0 flex items-center space-x-1">
+                    <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                    <span>添加时刻</span>
                   </button>
                 </div>
               </div>
 
-              <!-- Custom Time inputs (shown when custom selected) -->
-              <div id="sched-custom-time-box" class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2 hidden">
-                <label class="block text-[11px] font-semibold text-slate-700">自定义执行时间 (24小时制)</label>
-                <div class="flex items-center space-x-2">
-                  <input type="number" id="sched-custom-hour" min="0" max="23" value="20" class="w-16 text-center font-mono text-sm border border-slate-200 rounded-lg p-1.5 focus:ring-1 focus:ring-blue-500">
-                  <span class="font-bold text-slate-400">:</span>
-                  <input type="number" id="sched-custom-minute" min="0" max="59" value="30" class="w-16 text-center font-mono text-sm border border-slate-200 rounded-lg p-1.5 focus:ring-1 focus:ring-blue-500">
-                  <span class="text-xs text-slate-500">执行全流程</span>
+              <!-- Mode B: Interval Loop Panel -->
+              <div id="panel-sched-interval" class="space-y-3 hidden">
+                <label class="block text-[11px] font-semibold text-slate-600">选择或自定义循环步长</label>
+                <div class="grid grid-cols-3 gap-1.5">
+                  <button type="button" onclick="setIntervalPreset(30, 'minutes')" id="btn-int-30m" class="btn-interval-preset p-1.5 text-center text-xs border border-slate-200 hover:border-slate-300 rounded-lg transition">30 分钟</button>
+                  <button type="button" onclick="setIntervalPreset(1, 'hours')" id="btn-int-1h" class="btn-interval-preset p-1.5 text-center text-xs border border-slate-200 hover:border-slate-300 rounded-lg transition">1 小时</button>
+                  <button type="button" onclick="setIntervalPreset(2, 'hours')" id="btn-int-2h" class="btn-interval-preset p-1.5 text-center text-xs border border-slate-200 hover:border-slate-300 rounded-lg transition">2 小时</button>
+                  <button type="button" onclick="setIntervalPreset(4, 'hours')" id="btn-int-4h" class="btn-interval-preset p-1.5 text-center text-xs border-2 border-blue-600 bg-blue-50/50 rounded-lg font-bold transition">4 小时</button>
+                  <button type="button" onclick="setIntervalPreset(6, 'hours')" id="btn-int-6h" class="btn-interval-preset p-1.5 text-center text-xs border border-slate-200 hover:border-slate-300 rounded-lg transition">6 小时</button>
+                  <button type="button" onclick="setIntervalPreset(12, 'hours')" id="btn-int-12h" class="btn-interval-preset p-1.5 text-center text-xs border border-slate-200 hover:border-slate-300 rounded-lg transition">12 小时</button>
+                </div>
+
+                <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5">
+                  <span class="text-[11px] font-semibold text-slate-700">自定义循环步长</span>
+                  <div class="flex items-center space-x-2">
+                    <span class="text-xs text-slate-600">每</span>
+                    <input type="number" id="sched-interval-val" value="4" min="1" max="720" oninput="calculateNextRunTime()" class="w-16 text-center font-mono text-xs border border-slate-200 rounded-lg py-1.5 bg-white">
+                    <select id="sched-interval-unit" onchange="calculateNextRunTime()" class="text-xs border border-slate-200 rounded-lg px-2 py-1.5 bg-white">
+                      <option value="hours">小时</option>
+                      <option value="minutes">分钟</option>
+                    </select>
+                    <span class="text-xs text-slate-600">自动执行一次</span>
+                  </div>
                 </div>
               </div>
+
+              <!-- Mode C: Cron Panel -->
+              <div id="panel-sched-cron" class="space-y-3 hidden">
+                <label class="block text-[11px] font-semibold text-slate-600">标准 5 段式 Cron 表达式</label>
+                <input type="text" id="sched-cron-input" value="30 20 * * *" oninput="calculateNextRunTime()" class="w-full text-xs font-mono border border-slate-200 rounded-lg px-3 py-2 bg-white" placeholder="30 20 * * *">
+                <div class="text-[10px] text-slate-400 font-mono">示例: <code>30 8,12,20 * * 1-5</code> (工作日早中晚)</div>
+              </div>
+
             </div>
 
             <!-- Column 2: Pipeline Scope -->
@@ -1268,7 +1312,7 @@
         },
         obsidian: {
           enabled: document.getElementById('dist-obsidian-enabled').checked,
-          vault: document.getElementById('dist-obsidian-vault').value,
+          vault: document.getElementById('dist-obsidian-vault').value.trim(),
           folder: document.getElementById('dist-obsidian-folder').value.trim()
         },
         email: {
@@ -1290,38 +1334,123 @@
       alert("✅ 全部分发渠道配置（飞书、Obsidian、邮件、在线看板 & RSS）已成功保存！");
     }
 
-    let currentSchedulePreset = 'evening';
+    let currentScheduleMode = 'fixed';
+    let scheduleFixedTimes = ['20:30'];
 
-    function setSchedulePreset(preset, autoSave = false) {
-      currentSchedulePreset = preset;
-      document.querySelectorAll('.preset-btn').forEach(btn => {
-        btn.classList.remove('border-2', 'border-blue-600', 'bg-blue-50/50');
-        btn.classList.add('border', 'border-slate-200');
+    function setScheduleMode(mode) {
+      currentScheduleMode = mode;
+      ['fixed', 'interval', 'cron'].forEach(m => {
+        const btn = document.getElementById(`tab-sched-${m}`);
+        const panel = document.getElementById(`panel-sched-${m}`);
+        if (btn && panel) {
+          if (m === mode) {
+            btn.className = "flex-1 py-1.5 rounded-lg text-center transition bg-white text-blue-600 shadow-2xs font-bold";
+            panel.classList.remove('hidden');
+          } else {
+            btn.className = "flex-1 py-1.5 rounded-lg text-center text-slate-500 hover:text-slate-900 transition";
+            panel.classList.add('hidden');
+          }
+        }
       });
-      const targetBtn = document.getElementById(`preset-btn-${preset}`);
-      if (targetBtn) {
-        targetBtn.classList.remove('border', 'border-slate-200');
-        targetBtn.classList.add('border-2', 'border-blue-600', 'bg-blue-50/50');
-      }
+      calculateNextRunTime();
+    }
 
-      const customBox = document.getElementById('sched-custom-time-box');
-      if (preset === 'custom') {
-        customBox.classList.remove('hidden');
-      } else {
-        customBox.classList.add('hidden');
+    function renderScheduleTimes() {
+      const container = document.getElementById('sched-times-tags');
+      if (!container) return;
+      if (!scheduleFixedTimes || scheduleFixedTimes.length === 0) {
+        container.innerHTML = '<span class="text-xs text-slate-400 p-1">暂无时刻，请在下方输入并添加</span>';
+        return;
       }
+      scheduleFixedTimes.sort();
+      container.innerHTML = scheduleFixedTimes.map(t => {
+        const [h, m] = t.split(':').map(Number);
+        let icon = '🌇';
+        if (h >= 5 && h < 11) icon = '🌅';
+        else if (h >= 11 && h < 14) icon = '☀️';
+        else if (h >= 14 && h < 18) icon = '☕';
+        else if (h >= 18 && h < 23) icon = '🌇';
+        else icon = '🌙';
 
-      // Update next run display
-      const nextRunEl = document.getElementById('sched-next-run');
-      if (preset === 'evening') nextRunEl.innerText = "今日 20:30:00";
-      else if (preset === 'morning') nextRunEl.innerText = "明日 08:30:00";
-      else if (preset === 'interval_4h') nextRunEl.innerText = "约 4 小时后 (动态周期)";
-      else if (preset === 'custom') {
-        const h = String(document.getElementById('sched-custom-hour').value).padStart(2, '0');
-        const m = String(document.getElementById('sched-custom-minute').value).padStart(2, '0');
-        nextRunEl.innerText = `指定时刻 ${h}:${m}:00`;
+        return `
+          <div class="inline-flex items-center space-x-1.5 bg-blue-50 border border-blue-200 text-blue-800 px-2.5 py-1 rounded-lg text-xs font-mono font-bold shadow-2xs">
+            <span>${icon}</span>
+            <span>${t}</span>
+            <button type="button" onclick="removeScheduleTime('${t}')" class="text-blue-400 hover:text-red-600 transition ml-1 font-sans">✕</button>
+          </div>
+        `;
+      }).join('');
+      calculateNextRunTime();
+    }
+
+    function addScheduleTime() {
+      const val = document.getElementById('sched-input-time').value;
+      if (!val) return;
+      if (!scheduleFixedTimes.includes(val)) {
+        scheduleFixedTimes.push(val);
+        renderScheduleTimes();
       }
-      if (autoSave) saveData();
+    }
+
+    function removeScheduleTime(t) {
+      scheduleFixedTimes = scheduleFixedTimes.filter(x => x !== t);
+      renderScheduleTimes();
+    }
+
+    function applyPresetTimes(times) {
+      scheduleFixedTimes = [...new Set([...times])];
+      renderScheduleTimes();
+    }
+
+    function setIntervalPreset(val, unit) {
+      document.getElementById('sched-interval-val').value = val;
+      document.getElementById('sched-interval-unit').value = unit;
+      
+      document.querySelectorAll('.btn-interval-preset').forEach(b => {
+        b.className = "btn-interval-preset p-1.5 text-center text-xs border border-slate-200 hover:border-slate-300 rounded-lg transition";
+      });
+      const activeBtn = document.getElementById(`btn-int-${val}${unit === 'minutes' ? 'm' : 'h'}`);
+      if (activeBtn) {
+        activeBtn.className = "btn-interval-preset p-1.5 text-center text-xs border-2 border-blue-600 bg-blue-50/50 rounded-lg font-bold transition";
+      }
+      calculateNextRunTime();
+    }
+
+    function calculateNextRunTime() {
+      const nextEl = document.getElementById('sched-next-run');
+      if (!nextEl) return;
+
+      if (currentScheduleMode === 'fixed') {
+        if (!scheduleFixedTimes || scheduleFixedTimes.length === 0) {
+          nextEl.innerText = "未设定任何时刻";
+          return;
+        }
+        const now = new Date();
+        const curMins = now.getHours() * 60 + now.getMinutes();
+
+        let foundToday = null;
+        for (const t of scheduleFixedTimes) {
+          const [h, m] = t.split(':').map(Number);
+          const mins = h * 60 + m;
+          if (mins > curMins) {
+            foundToday = t;
+            break;
+          }
+        }
+        if (foundToday) {
+          nextEl.innerText = `今日 ${foundToday}:00`;
+        } else {
+          nextEl.innerText = `明日 ${scheduleFixedTimes[0]}:00`;
+        }
+      } else if (currentScheduleMode === 'interval') {
+        const val = parseInt(document.getElementById('sched-interval-val').value || '4');
+        const unit = document.getElementById('sched-interval-unit').value;
+        const unitText = unit === 'minutes' ? '分钟' : '小时';
+        nextEl.innerText = `约 ${val} ${unitText}后 (动态循环)`;
+      } else if (currentScheduleMode === 'cron') {
+        const cron = document.getElementById('sched-cron-input').value;
+        nextEl.innerText = `Cron: ${cron}`;
+      }
     }
 
     function updateScheduleUI() {
@@ -1339,9 +1468,11 @@
     async function saveScheduleConfig() {
       state.scheduled_tasks = {
         enabled: document.getElementById('sched-enabled').checked,
-        preset: currentSchedulePreset,
-        hour: parseInt(document.getElementById('sched-custom-hour').value || '20'),
-        minute: parseInt(document.getElementById('sched-custom-minute').value || '30'),
+        mode: currentScheduleMode,
+        fixed_times: scheduleFixedTimes,
+        interval_value: parseInt(document.getElementById('sched-interval-val').value || '4'),
+        interval_unit: document.getElementById('sched-interval-unit').value,
+        cron_expression: document.getElementById('sched-cron-input').value.trim(),
         scrape: document.getElementById('sched-action-scrape').checked,
         curate: document.getElementById('sched-action-curate').checked,
         distribute: document.getElementById('sched-action-distribute').checked,

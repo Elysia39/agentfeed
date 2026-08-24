@@ -58,9 +58,15 @@
   },
   "scheduled_tasks": {
     "enabled": true,
-    "preset": "evening",
-    "hour": 20,
-    "minute": 30,
+    "mode": "fixed",
+    "fixed_times": [
+      "08:30",
+      "12:00",
+      "20:30"
+    ],
+    "interval_value": 4,
+    "interval_unit": "hours",
+    "cron_expression": "30 20 * * *",
     "scrape": true,
     "curate": true,
     "distribute": true,

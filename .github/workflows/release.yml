@@ -43,7 +43,9 @@ jobs:
         run: |
           pyinstaller --noconfirm --onedir --windowed \
             --name "AgentFeed" \
+            --icon "icon.icns" \
             --add-data "web_admin.html:." \
+            --add-data "icon.png:." \
             --add-data "sources.example.json:." \
             --add-data ".env.example:." \
             desktop.py
@@ -55,7 +57,9 @@ jobs:
         run: |
           pyinstaller --noconfirm --onedir --windowed `
             --name "AgentFeed" `
+            --icon "icon.ico" `
             --add-data "web_admin.html;." `
+            --add-data "icon.png;." `
             --add-data "sources.example.json;." `
             --add-data ".env.example;." `
             desktop.py
@@ -67,7 +71,9 @@ jobs:
         run: |
           pyinstaller --noconfirm --onedir --windowed \
             --name "AgentFeed" \
+            --icon "icon.png" \
             --add-data "web_admin.html:." \
+            --add-data "icon.png:." \
             --add-data "sources.example.json:." \
             --add-data ".env.example:." \
             desktop.py
