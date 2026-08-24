@@ -9,7 +9,7 @@ UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML,
 
 def fetch_discord_via_rsshub(route_or_channel_id, nodes=None):
     if nodes is None:
-        nodes = ["https://rsshub.liumingye.cn", "https://rss-hub-hub-bin.vercel.app", "https://rsshub.app"]
+        nodes = ["https://rsshub.app", "https://rsshub.rssforever.com", "https://rsshub.app"]
     
     route = route_or_channel_id if route_or_channel_id.startswith("/") else f"/discord/channel/{route_or_channel_id}"
     

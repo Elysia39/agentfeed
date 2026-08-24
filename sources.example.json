@@ -13,8 +13,8 @@
     "sec": true
   },
   "rsshub_instances": {
-    "primary": "https://rsshub.liumingye.cn",
-    "backup": "https://rss-hub-hub-bin.vercel.app",
+    "primary": "https://rsshub.app",
+    "backup": "https://rsshub.rssforever.com",
     "official": "https://rsshub.app"
   },
   "llm_settings": {
@@ -118,7 +118,7 @@
       "id": "rss-5",
       "name": "36氪·8点1氪快讯",
       "route": "/36kr/newsflashes",
-      "custom_rsshub_url": "https://rss-hub-hub-bin.vercel.app",
+      "custom_rsshub_url": "https://rsshub.rssforever.com",
       "enabled": true
     },
     {
@@ -132,7 +132,7 @@
       "id": "rss-7",
       "name": "富途要闻",
       "route": "/futunn/highlights",
-      "custom_rsshub_url": "https://rss-hub-hub-bin.vercel.app",
+      "custom_rsshub_url": "https://rsshub.rssforever.com",
       "enabled": true
     },
     {

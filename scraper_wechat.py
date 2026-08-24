@@ -27,7 +27,7 @@ def fetch_all_wechat_articles(custom_accounts=None):
     accounts = custom_accounts if custom_accounts else WECHAT_SAMPLE_ROUTES
     
     # Try local RSSHub nodes
-    nodes = ["https://rsshub.liumingye.cn", "https://rss-hub-hub-bin.vercel.app"]
+    nodes = ["https://rsshub.app", "https://rsshub.rssforever.com"]
     
     for acc in accounts:
         name = acc.get("name", "微信公众号")
