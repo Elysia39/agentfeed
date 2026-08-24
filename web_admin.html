@@ -70,7 +70,7 @@
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div class="bg-slate-50 border border-slate-200 rounded-xl p-2.5 space-y-1">
           <div class="flex items-center justify-between">
-            <span class="text-[11px] font-bold text-slate-700">🇭🇰 主力 (香港)</span>
+            <span class="text-[11px] font-bold text-slate-700">主力</span>
             <span id="ping-primary" class="text-[9px] px-1 py-0.2 rounded bg-slate-200 text-slate-600 font-mono">--</span>
           </div>
           <input type="text" id="inst-primary" class="w-full text-xs font-mono bg-white border border-slate-200 rounded-md px-2 py-1 focus:ring-1 focus:ring-blue-500 focus:outline-none">
@@ -78,7 +78,7 @@
 
         <div class="bg-slate-50 border border-slate-200 rounded-xl p-2.5 space-y-1">
           <div class="flex items-center justify-between">
-            <span class="text-[11px] font-bold text-slate-700">⚡ 备用 (Vercel)</span>
+            <span class="text-[11px] font-bold text-slate-700">备用</span>
             <span id="ping-backup" class="text-[9px] px-1 py-0.2 rounded bg-slate-200 text-slate-600 font-mono">--</span>
           </div>
           <input type="text" id="inst-backup" class="w-full text-xs font-mono bg-white border border-slate-200 rounded-md px-2 py-1 focus:ring-1 focus:ring-blue-500 focus:outline-none">
@@ -86,7 +86,7 @@
 
         <div class="bg-slate-50 border border-slate-200 rounded-xl p-2.5 space-y-1">
           <div class="flex items-center justify-between">
-            <span class="text-[11px] font-bold text-slate-700">🌐 官方兜底</span>
+            <span class="text-[11px] font-bold text-slate-700">官方</span>
             <span id="ping-official" class="text-[9px] px-1 py-0.2 rounded bg-slate-200 text-slate-600 font-mono">--</span>
           </div>
           <input type="text" id="inst-official" class="w-full text-xs font-mono bg-white border border-slate-200 rounded-md px-2 py-1 focus:ring-1 focus:ring-blue-500 focus:outline-none">
@@ -697,7 +697,7 @@
             </button>
           </div>
 
-          <!-- 4. Online Web Brief & RSS Feed Card (Moved from header) -->
+          <!-- 4. Online Web Brief & RSS Feed Card -->
           <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-4 flex flex-col justify-between">
             <div class="space-y-3">
               <div class="flex items-center justify-between pb-2 border-b border-slate-100">
@@ -705,7 +705,7 @@
                   <span class="w-7 h-7 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center font-bold">
                     <i data-lucide="globe" class="w-4 h-4"></i>
                   </span>
-                  <span class="font-bold text-xs text-slate-900">4. 在线晚报 & RSS 订阅</span>
+                  <span class="font-bold text-xs text-slate-900">4. 在线情报看板 & RSS 订阅</span>
                 </div>
                 <label class="relative inline-flex items-center cursor-pointer">
                   <input type="checkbox" id="dist-web-enabled" checked class="sr-only peer">
@@ -718,14 +718,14 @@
                 <div class="flex items-center justify-between">
                   <span class="text-xs font-bold text-slate-800 flex items-center space-x-1.5">
                     <i data-lucide="layout" class="w-3.5 h-3.5 text-blue-600"></i>
-                    <span>在线 Web 晚报</span>
+                    <span>在线 Web 看板</span>
                   </span>
                   <span class="text-[9px] bg-blue-50 text-blue-700 border border-blue-200 px-1.5 py-0.5 rounded font-mono font-bold">Cloudflare R2</span>
                 </div>
                 <input type="text" id="dist-web-url" value="https://feed.your-domain.com/" oninput="updateDistLinks()" class="w-full text-[11px] font-mono border border-slate-200 rounded-md px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-500" placeholder="https://feed.your-domain.com/">
                 <a id="dist-web-link" href="https://feed.your-domain.com/" target="_blank" class="w-full text-xs bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 py-1.5 rounded-md font-semibold flex items-center justify-center space-x-1.5 transition shadow-2xs">
                   <i data-lucide="external-link" class="w-3.5 h-3.5 text-blue-600"></i>
-                  <span>在线晚报</span>
+                  <span>打开情报看板</span>
                 </a>
               </div>
 
@@ -741,11 +741,11 @@
                 <input type="text" id="dist-rss-url" value="https://feed.your-domain.com/feed.xml" oninput="updateDistLinks()" class="w-full text-[11px] font-mono border border-slate-200 rounded-md px-2 py-1 focus:outline-none focus:ring-1 focus:ring-orange-500" placeholder="https://feed.your-domain.com/feed.xml">
                 <a id="dist-rss-link" href="https://feed.your-domain.com/feed.xml" target="_blank" class="w-full text-xs bg-orange-50 hover:bg-orange-100 border border-orange-200 text-orange-700 py-1.5 rounded-md font-semibold flex items-center justify-center space-x-1.5 transition shadow-2xs">
                   <i data-lucide="rss" class="w-3.5 h-3.5 text-orange-600"></i>
-                  <span>RSS 订阅源</span>
+                  <span>订阅 RSS 源</span>
                 </a>
               </div>
 
-              <p class="text-[10px] text-slate-400">支持直接在网页端沉浸阅读，或使用 NetNewsWire / Feedly 及各大下游 Agent 自动订阅。</p>
+              <p class="text-[10px] text-slate-400">支持直接在云端看板沉浸阅读，或使用 NetNewsWire / Feedly 及各大下游 Agent 自动订阅。</p>
             </div>
 
             <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
@@ -757,12 +757,167 @@
         </div>
       </div>
 
-      <!-- Major Block 3: History Archive -->
+      <!-- Major Block 3: Scheduled Tasks (定时任务调度) -->
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <span class="w-3 h-3 rounded-full bg-blue-600"></span>
+            <h2 class="text-base font-bold text-slate-900">⏰ 定时任务调度 (Scheduled Tasks)</h2>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span id="sched-status-badge" class="text-xs px-2.5 py-0.5 rounded-full font-medium bg-emerald-100 text-emerald-800 flex items-center space-x-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+              <span>调度器就绪</span>
+            </span>
+            <button onclick="saveScheduleConfig()" class="text-xs bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg font-semibold transition flex items-center space-x-1 shadow-xs">
+              <i data-lucide="save" class="w-3.5 h-3.5"></i>
+              <span>保存调度配置</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-6">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Column 1: Frequency & Timing -->
+            <div class="space-y-4">
+              <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                <span class="font-bold text-xs text-slate-900 flex items-center space-x-1.5">
+                  <i data-lucide="clock" class="w-4 h-4 text-blue-600"></i>
+                  <span>1. 触发频次与时间</span>
+                </span>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" id="sched-enabled" checked class="sr-only peer" onchange="updateScheduleUI()">
+                  <div class="w-8 h-4.5 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3.5 after:w-3.5 after:transition-all"></div>
+                </label>
+              </div>
+
+              <div class="space-y-2">
+                <label class="block text-[11px] font-semibold text-slate-600">预设执行方案</label>
+                <div class="grid grid-cols-2 gap-2">
+                  <button type="button" onclick="setSchedulePreset('evening')" id="preset-btn-evening" class="preset-btn p-2.5 text-left border-2 border-blue-600 bg-blue-50/50 rounded-xl text-xs transition">
+                    <div class="font-bold text-slate-900">🌇 每日晚报 (默认)</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5 font-mono">每天 20:30 执行</div>
+                  </button>
+                  <button type="button" onclick="setSchedulePreset('morning')" id="preset-btn-morning" class="preset-btn p-2.5 text-left border border-slate-200 hover:border-slate-300 rounded-xl text-xs transition">
+                    <div class="font-bold text-slate-900">🌅 每日早报</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5 font-mono">每天 08:30 执行</div>
+                  </button>
+                  <button type="button" onclick="setSchedulePreset('interval_4h')" id="preset-btn-interval_4h" class="preset-btn p-2.5 text-left border border-slate-200 hover:border-slate-300 rounded-xl text-xs transition">
+                    <div class="font-bold text-slate-900">⏱️ 每 4 小时刷新</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5 font-mono">高频跟踪感知</div>
+                  </button>
+                  <button type="button" onclick="setSchedulePreset('custom')" id="preset-btn-custom" class="preset-btn p-2.5 text-left border border-slate-200 hover:border-slate-300 rounded-xl text-xs transition">
+                    <div class="font-bold text-slate-900">⚙️ 自定义时间</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5 font-mono">设定指定时刻</div>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Custom Time inputs (shown when custom selected) -->
+              <div id="sched-custom-time-box" class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2 hidden">
+                <label class="block text-[11px] font-semibold text-slate-700">自定义执行时间 (24小时制)</label>
+                <div class="flex items-center space-x-2">
+                  <input type="number" id="sched-custom-hour" min="0" max="23" value="20" class="w-16 text-center font-mono text-sm border border-slate-200 rounded-lg p-1.5 focus:ring-1 focus:ring-blue-500">
+                  <span class="font-bold text-slate-400">:</span>
+                  <input type="number" id="sched-custom-minute" min="0" max="59" value="30" class="w-16 text-center font-mono text-sm border border-slate-200 rounded-lg p-1.5 focus:ring-1 focus:ring-blue-500">
+                  <span class="text-xs text-slate-500">执行全流程</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Column 2: Pipeline Scope -->
+            <div class="space-y-4">
+              <div class="pb-2 border-b border-slate-100">
+                <span class="font-bold text-xs text-slate-900 flex items-center space-x-1.5">
+                  <i data-lucide="layers" class="w-4 h-4 text-purple-600"></i>
+                  <span>2. 触发执行管道</span>
+                </span>
+              </div>
+
+              <div class="space-y-2.5 text-xs text-slate-700">
+                <label class="flex items-center space-x-2.5 p-2 rounded-lg bg-slate-50 border border-slate-100 cursor-pointer">
+                  <input type="checkbox" id="sched-action-scrape" checked class="w-4 h-4 text-blue-600 rounded">
+                  <div>
+                    <div class="font-semibold text-slate-900">全源信息感知采集</div>
+                    <div class="text-[10px] text-slate-500">并发扫描 11 大感知源的全部已启用订阅项</div>
+                  </div>
+                </label>
+
+                <label class="flex items-center space-x-2.5 p-2 rounded-lg bg-slate-50 border border-slate-100 cursor-pointer">
+                  <input type="checkbox" id="sched-action-curate" checked class="w-4 h-4 text-blue-600 rounded">
+                  <div>
+                    <div class="font-semibold text-slate-900">大模型提炼与跨源去重</div>
+                    <div class="text-[10px] text-slate-500">提取核心事实、宏观推演与标的关联</div>
+                  </div>
+                </label>
+
+                <label class="flex items-center space-x-2.5 p-2 rounded-lg bg-slate-50 border border-slate-100 cursor-pointer">
+                  <input type="checkbox" id="sched-action-distribute" checked class="w-4 h-4 text-blue-600 rounded">
+                  <div>
+                    <div class="font-semibold text-slate-900">多渠道自动分发</div>
+                    <div class="text-[10px] text-slate-500">同步至飞书群、飞书云文档、Obsidian与云端看板</div>
+                  </div>
+                </label>
+
+                <label class="flex items-center space-x-2.5 p-2 rounded-lg bg-slate-50 border border-slate-100 cursor-pointer">
+                  <input type="checkbox" id="sched-action-notify" checked class="w-4 h-4 text-blue-600 rounded">
+                  <div>
+                    <div class="font-semibold text-slate-900">系统桌面原生通知</div>
+                    <div class="text-[10px] text-slate-500">执行完毕后在 macOS / Windows 弹出通知卡片</div>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Column 3: Runtime Metrics & One-click Run -->
+            <div class="space-y-4 flex flex-col justify-between">
+              <div>
+                <div class="pb-2 border-b border-slate-100 mb-3">
+                  <span class="font-bold text-xs text-slate-900 flex items-center space-x-1.5">
+                    <i data-lucide="activity" class="w-4 h-4 text-emerald-600"></i>
+                    <span>3. 运行指标与即时触发</span>
+                  </span>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-2.5 font-mono text-xs">
+                  <div class="flex items-center justify-between text-slate-600">
+                    <span>调度机制：</span>
+                    <span id="sched-engine-type" class="font-bold text-slate-900">内置守护进程 / System Cron</span>
+                  </div>
+                  <div class="flex items-center justify-between text-slate-600">
+                    <span>下次预计执行：</span>
+                    <span id="sched-next-run" class="font-bold text-blue-600">今日 20:30:00</span>
+                  </div>
+                  <div class="flex items-center justify-between text-slate-600">
+                    <span>上次执行时间：</span>
+                    <span id="sched-last-run" class="text-slate-700">2026-08-25 02:40:12</span>
+                  </div>
+                  <div class="flex items-center justify-between text-slate-600">
+                    <span>上次执行状态：</span>
+                    <span id="sched-last-status" class="text-emerald-600 font-bold">● 成功 (已分发全渠道)</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-2 pt-2">
+                <button onclick="triggerRun()" class="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold flex items-center justify-center space-x-2 transition shadow-xs">
+                  <i data-lucide="play" class="w-4 h-4 text-emerald-400"></i>
+                  <span>立即执行一次全流程 (Run Now)</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Major Block 4: History Archive (历史情报归档) -->
       <div class="space-y-3">
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-2">
             <span class="w-3 h-3 rounded-full bg-slate-600"></span>
-            <h2 class="text-base font-bold text-slate-900">📜 历史晚报归档</h2>
+            <h2 class="text-base font-bold text-slate-900">📜 历史情报归档</h2>
           </div>
         </div>
         <div id="list-history" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3"></div>
@@ -982,6 +1137,18 @@
         document.getElementById('dist-rss-url').value = webRss.rss_url || 'https://feed.your-domain.com/feed.xml';
         updateDistLinks();
 
+        // Scheduled Tasks Settings
+        const sched = state.scheduled_tasks || { enabled: true, preset: 'evening', hour: 20, minute: 30, scrape: true, curate: true, distribute: true, notify: true };
+        document.getElementById('sched-enabled').checked = sched.enabled !== false;
+        setSchedulePreset(sched.preset || 'evening', false);
+        if (sched.hour !== undefined) document.getElementById('sched-custom-hour').value = sched.hour;
+        if (sched.minute !== undefined) document.getElementById('sched-custom-minute').value = sched.minute;
+        if (sched.scrape !== undefined) document.getElementById('sched-action-scrape').checked = !!sched.scrape;
+        if (sched.curate !== undefined) document.getElementById('sched-action-curate').checked = !!sched.curate;
+        if (sched.distribute !== undefined) document.getElementById('sched-action-distribute').checked = !!sched.distribute;
+        if (sched.notify !== undefined) document.getElementById('sched-action-notify').checked = !!sched.notify;
+        updateScheduleUI();
+
         renderAll();
         renderSecAndMacro();
         loadLiveMacroQuotes();
@@ -1120,7 +1287,68 @@
         }
       };
       await saveData();
-      alert("✅ 全部分发渠道配置（飞书、Obsidian、邮件、在线晚报 & RSS）已成功保存！");
+      alert("✅ 全部分发渠道配置（飞书、Obsidian、邮件、在线看板 & RSS）已成功保存！");
+    }
+
+    let currentSchedulePreset = 'evening';
+
+    function setSchedulePreset(preset, autoSave = false) {
+      currentSchedulePreset = preset;
+      document.querySelectorAll('.preset-btn').forEach(btn => {
+        btn.classList.remove('border-2', 'border-blue-600', 'bg-blue-50/50');
+        btn.classList.add('border', 'border-slate-200');
+      });
+      const targetBtn = document.getElementById(`preset-btn-${preset}`);
+      if (targetBtn) {
+        targetBtn.classList.remove('border', 'border-slate-200');
+        targetBtn.classList.add('border-2', 'border-blue-600', 'bg-blue-50/50');
+      }
+
+      const customBox = document.getElementById('sched-custom-time-box');
+      if (preset === 'custom') {
+        customBox.classList.remove('hidden');
+      } else {
+        customBox.classList.add('hidden');
+      }
+
+      // Update next run display
+      const nextRunEl = document.getElementById('sched-next-run');
+      if (preset === 'evening') nextRunEl.innerText = "今日 20:30:00";
+      else if (preset === 'morning') nextRunEl.innerText = "明日 08:30:00";
+      else if (preset === 'interval_4h') nextRunEl.innerText = "约 4 小时后 (动态周期)";
+      else if (preset === 'custom') {
+        const h = String(document.getElementById('sched-custom-hour').value).padStart(2, '0');
+        const m = String(document.getElementById('sched-custom-minute').value).padStart(2, '0');
+        nextRunEl.innerText = `指定时刻 ${h}:${m}:00`;
+      }
+      if (autoSave) saveData();
+    }
+
+    function updateScheduleUI() {
+      const enabled = document.getElementById('sched-enabled').checked;
+      const badge = document.getElementById('sched-status-badge');
+      if (enabled) {
+        badge.className = "text-xs px-2.5 py-0.5 rounded-full font-medium bg-emerald-100 text-emerald-800 flex items-center space-x-1";
+        badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span><span>调度器运行中</span>`;
+      } else {
+        badge.className = "text-xs px-2.5 py-0.5 rounded-full font-medium bg-slate-100 text-slate-600 flex items-center space-x-1";
+        badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span><span>调度已暂停</span>`;
+      }
+    }
+
+    async function saveScheduleConfig() {
+      state.scheduled_tasks = {
+        enabled: document.getElementById('sched-enabled').checked,
+        preset: currentSchedulePreset,
+        hour: parseInt(document.getElementById('sched-custom-hour').value || '20'),
+        minute: parseInt(document.getElementById('sched-custom-minute').value || '30'),
+        scrape: document.getElementById('sched-action-scrape').checked,
+        curate: document.getElementById('sched-action-curate').checked,
+        distribute: document.getElementById('sched-action-distribute').checked,
+        notify: document.getElementById('sched-action-notify').checked
+      };
+      await saveData();
+      alert("✅ AgentFeed 定时任务调度配置已成功保存！");
     }
 
     async function testLLMCuration() {

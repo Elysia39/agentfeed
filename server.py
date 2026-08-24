@@ -22,6 +22,7 @@ from distributor_email import send_email_brief
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 SOURCES_FILE = os.path.join(CURRENT_DIR, "sources.json")
 HISTORY_FILE = os.path.join(CURRENT_DIR, "feed_history.json")
+HTML_FILE = os.path.join(CURRENT_DIR, "web_admin.html")
 import sys
 PYTHON_BIN = sys.executable
 SCRIPT_PATH = os.path.join(CURRENT_DIR, "run_daily_brief.py")
@@ -49,12 +50,16 @@ def load_sources():
             print(f"Error loading sources: {e}")
     return {
         "channel_toggles": {
-            "rss": true, "web": true, "blog": true, "tg": true, "dc": true,
-            "sub": true, "wx": true, "hn": true, "reddit": true, "arxiv": true, "sec": true
+            "rss": True, "web": True, "blog": True, "tg": True, "dc": True,
+            "sub": True, "wx": True, "hn": True, "reddit": True, "arxiv": True, "sec": True
         },
         "rsshub_instances": {},
         "llm_settings": {},
         "distribution_settings": {},
+        "scheduled_tasks": {
+            "enabled": True, "preset": "evening", "hour": 20, "minute": 30,
+            "scrape": True, "curate": True, "distribute": True, "notify": True
+        },
         "sec_filings": {},
         "macro_indicators": [],
         "discord_channels": [],

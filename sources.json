@@ -56,6 +56,16 @@
       "rss_url": "https://feed.your-domain.com/feed.xml"
     }
   },
+  "scheduled_tasks": {
+    "enabled": true,
+    "preset": "evening",
+    "hour": 20,
+    "minute": 30,
+    "scrape": true,
+    "curate": true,
+    "distribute": true,
+    "notify": true
+  },
   "keyword_filters": {
     "watchlist": [
       "英伟达",
