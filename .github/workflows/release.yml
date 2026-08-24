@@ -1,0 +1,126 @@
+name: 🚀 Build & Release Desktop App
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            asset_name: AgentFeed-macOS.zip
+          - os: windows-latest
+            asset_name: AgentFeed-Windows.zip
+          - os: ubuntu-latest
+            asset_name: AgentFeed-Linux.tar.gz
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Build macOS Application Package
+        if: runner.os == 'macOS'
+        run: |
+          pyinstaller --noconfirm --onedir --windowed \
+            --name "AgentFeed" \
+            --add-data "web_admin.html:." \
+            --add-data "sources.example.json:." \
+            --add-data ".env.example:." \
+            desktop.py
+          cd dist
+          zip -r ../AgentFeed-macOS.zip AgentFeed.app AgentFeed
+
+      - name: Build Windows Application Package
+        if: runner.os == 'Windows'
+        run: |
+          pyinstaller --noconfirm --onedir --windowed `
+            --name "AgentFeed" `
+            --add-data "web_admin.html;." `
+            --add-data "sources.example.json;." `
+            --add-data ".env.example;." `
+            desktop.py
+          cd dist
+          Compress-Archive -Path AgentFeed -DestinationPath ../AgentFeed-Windows.zip
+
+      - name: Build Linux Application Package
+        if: runner.os == 'Linux'
+        run: |
+          pyinstaller --noconfirm --onedir --windowed \
+            --name "AgentFeed" \
+            --add-data "web_admin.html:." \
+            --add-data "sources.example.json:." \
+            --add-data ".env.example:." \
+            desktop.py
+          cd dist
+          tar -czvf ../AgentFeed-Linux.tar.gz AgentFeed
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.asset_name }}
+          path: ${{ matrix.asset_name }}
+
+  release:
+    name: 📦 Publish GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release_assets
+
+      - name: Consolidate files
+        run: |
+          mkdir -p final_assets
+          find release_assets/ -type f -exec mv {} final_assets/ \;
+          ls -lh final_assets/
+
+      - name: Create or Update GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          name: "AgentFeed ${{ github.ref_name }} - Universal Perception & Desktop Hub"
+          body: |
+            ## 📡 AgentFeed Release ${{ github.ref_name }}
+
+            欢迎下载 **AgentFeed** 独立桌面应用安装包！
+
+            ### 📦 包含的跨平台二进制安装包：
+            - 🍏 **macOS (Apple Silicon & Intel)**: `AgentFeed-macOS.zip` (解压双击 `AgentFeed.app` 即可直接运行)
+            - 🪟 **Windows (x64)**: `AgentFeed-Windows.zip` (解压双击 `AgentFeed/AgentFeed.exe` 即可运行)
+            - 🐧 **Linux (x64)**: `AgentFeed-Linux.tar.gz` (解压运行 `./AgentFeed`)
+
+            ### ✨ 核心功能与亮点：
+            1. **🖥️ 独立原生桌面应用 (Native Desktop App)**：支持 Mac 菜单栏/Windows 托盘、系统级原生通知。
+            2. **🌐 11 大免登录全源感知矩阵**：原生 RSS/XML、媒体、X (Twitter)、TG、Discord、Substack、微信公众号、Hacker News、Reddit、ArXiv 论文、SEC EDGAR。
+            3. **🧠 大模型智能梳理与去重**：支持 OpenAI / Gemini / Claude / 本地 Agent 规则引擎。
+            4. **🚀 4 大渠道分发中心**：飞书群卡片、飞书云文档、Obsidian 双链归档、邮件 SMTP 与全球 CDN RSS。
+            5. **🔌 Agent-Ready**：后台自动常驻 `127.0.0.1:9830` REST API 供下游 Agent 随时通信。
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          files: final_assets/*
