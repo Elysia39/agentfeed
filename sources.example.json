@@ -1,0 +1,713 @@
+{
+  "channel_toggles": {
+    "rss": true,
+    "web": true,
+    "blog": true,
+    "tg": true,
+    "dc": true,
+    "sub": true,
+    "wx": true,
+    "hn": true,
+    "reddit": true,
+    "arxiv": true,
+    "sec": true
+  },
+  "rsshub_instances": {
+    "primary": "https://rsshub.liumingye.cn",
+    "backup": "https://rss-hub-hub-bin.vercel.app",
+    "official": "https://rsshub.app"
+  },
+  "llm_settings": {
+    "enabled": false,
+    "provider": "openai_compatible",
+    "api_key": "",
+    "base_url": "https://api.deepseek.com/v1",
+    "model": "deepseek-chat",
+    "temperature": 0.3
+  },
+  "distribution_settings": {
+    "feishu": {
+      "enabled": false,
+      "webhook_url": ""
+    },
+    "feishu_doc": {
+      "enabled": false,
+      "app_id": "",
+      "app_secret": "",
+      "folder_token": ""
+    },
+    "obsidian": {
+      "enabled": true,
+      "vault": "Investing",
+      "folder": "Daily Intel"
+    },
+    "email": {
+      "enabled": false,
+      "smtp_host": "smtp.qq.com",
+      "smtp_port": 465,
+      "use_ssl": true,
+      "sender_email": "",
+      "sender_password": "",
+      "recipient_emails": ""
+    },
+    "web_and_rss": {
+      "enabled": true,
+      "web_url": "https://feed.your-domain.com/",
+      "rss_url": "https://feed.your-domain.com/feed.xml"
+    }
+  },
+  "keyword_filters": {
+    "watchlist": [
+      "英伟达",
+      "NVDA",
+      "台积电",
+      "TSMC",
+      "美联储",
+      "降息",
+      "Blackwell",
+      "算力",
+      "Robotaxi",
+      "OpenAI",
+      "AAPL",
+      "MSFT",
+      "GOOG",
+      "Claude",
+      "DeepSeek"
+    ],
+    "blacklist": [
+      "广告",
+      "抽奖",
+      "赞助",
+      "限时特惠",
+      "招聘",
+      "课程推广",
+      "优惠券",
+      "直播带货"
+    ]
+  },
+  "rss_subscriptions": [
+    {
+      "id": "rss-1",
+      "name": "华尔街日报·市场",
+      "route": "/wsj/zh-hans/markets",
+      "custom_rsshub_url": "",
+      "enabled": true
+    },
+    {
+      "id": "rss-2",
+      "name": "华尔街日报·全球要闻",
+      "route": "/wsj/zh-hans/world",
+      "custom_rsshub_url": "",
+      "enabled": true
+    },
+    {
+      "id": "rss-3",
+      "name": "路透社·美股要闻",
+      "route": "/reuters/business/markets/us",
+      "custom_rsshub_url": "",
+      "enabled": true
+    },
+    {
+      "id": "rss-4",
+      "name": "彭博市场精要 / Bloomberg",
+      "route": "/bloomberg/markets",
+      "custom_rsshub_url": "",
+      "enabled": true
+    },
+    {
+      "id": "rss-5",
+      "name": "36氪·8点1氪快讯",
+      "route": "/36kr/newsflashes",
+      "custom_rsshub_url": "https://rss-hub-hub-bin.vercel.app",
+      "enabled": true
+    },
+    {
+      "id": "rss-6",
+      "name": "虎嗅·24小时快讯",
+      "route": "/huxiu/moment",
+      "custom_rsshub_url": "",
+      "enabled": true
+    },
+    {
+      "id": "rss-7",
+      "name": "富途要闻",
+      "route": "/futunn/highlights",
+      "custom_rsshub_url": "https://rss-hub-hub-bin.vercel.app",
+      "enabled": true
+    },
+    {
+      "id": "rss-8",
+      "name": "TechCrunch AI 深度 (XML直链)",
+      "route": "https://techcrunch.com/category/artificial-intelligence/feed/",
+      "custom_rsshub_url": "",
+      "enabled": true
+    },
+    {
+      "id": "rss-9",
+      "name": "The Verge 前沿科技 (XML直链)",
+      "route": "https://www.theverge.com/rss/index.xml",
+      "custom_rsshub_url": "",
+      "enabled": true
+    }
+  ],
+  "websites": [
+    {
+      "id": "web-1",
+      "name": "彭博商业周刊 / Bloomberg Markets",
+      "url": "https://www.bloomberg.com/markets",
+      "engine": "Ego Lite",
+      "custom_rsshub_url": "",
+      "bypass_paywall": true,
+      "enabled": true
+    },
+    {
+      "id": "web-2",
+      "name": "英国金融时报中文网 / FTChinese",
+      "url": "https://www.ftchinese.com",
+      "engine": "Ego Lite",
+      "custom_rsshub_url": "",
+      "bypass_paywall": true,
+      "enabled": true
+    },
+    {
+      "id": "web-3",
+      "name": "纽约时报·商业深度",
+      "url": "https://www.nytimes.com/section/business",
+      "engine": "Camoufox",
+      "custom_rsshub_url": "",
+      "bypass_paywall": true,
+      "enabled": true
+    },
+    {
+      "id": "web-4",
+      "name": "The Information (硅谷独家创投)",
+      "url": "https://www.theinformation.com",
+      "engine": "Camoufox",
+      "custom_rsshub_url": "",
+      "bypass_paywall": true,
+      "enabled": true
+    },
+    {
+      "id": "web-5",
+      "name": "富途牛牛·要闻快讯",
+      "url": "https://news.futunn.com/main",
+      "engine": "Ego Lite",
+      "custom_rsshub_url": "",
+      "bypass_paywall": false,
+      "enabled": true
+    },
+    {
+      "id": "web-6",
+      "name": "晚点 LatePost (科技商业深度)",
+      "url": "https://www.latepost.com",
+      "engine": "Ego Lite",
+      "custom_rsshub_url": "",
+      "bypass_paywall": false,
+      "enabled": true
+    }
+  ],
+  "bloggers": [
+    {
+      "id": "blog-1",
+      "name": "SemiAnalysis (半导体产业链)",
+      "platform": "X (Twitter)",
+      "handle": "@SemiAnalysis",
+      "url": "https://x.com/SemiAnalysis",
+      "engine": "Ego Lite",
+      "enabled": true
+    },
+    {
+      "id": "blog-2",
+      "name": "Sam Altman (OpenAI CEO)",
+      "platform": "X (Twitter)",
+      "handle": "@sama",
+      "url": "https://x.com/sama",
+      "engine": "Ego Lite",
+      "enabled": true
+    },
+    {
+      "id": "blog-3",
+      "name": "Elon Musk",
+      "platform": "X (Twitter)",
+      "handle": "@elonmusk",
+      "url": "https://x.com/elonmusk",
+      "engine": "Ego Lite",
+      "enabled": true
+    },
+    {
+      "id": "blog-4",
+      "name": "TechInvestor Dan",
+      "platform": "X (Twitter)",
+      "handle": "@TechInvestor_Dan",
+      "url": "https://x.com/TechInvestor_Dan",
+      "engine": "Ego Lite",
+      "enabled": true
+    },
+    {
+      "id": "blog-5",
+      "name": "Andrej Karpathy (前Tesla AI/Eureka)",
+      "platform": "X (Twitter)",
+      "handle": "@karpathy",
+      "url": "https://x.com/karpathy",
+      "engine": "Ego Lite",
+      "enabled": true
+    },
+    {
+      "id": "blog-6",
+      "name": "Dylan Patel (半导体首席分析师)",
+      "platform": "X (Twitter)",
+      "handle": "@dylan522p",
+      "url": "https://x.com/dylan522p",
+      "engine": "Ego Lite",
+      "enabled": true
+    },
+    {
+      "id": "blog-7",
+      "name": "Nick Timiraos (WSJ美联储通讯社)",
+      "platform": "X (Twitter)",
+      "handle": "@NickTimiraos",
+      "url": "https://x.com/NickTimiraos",
+      "engine": "Ego Lite",
+      "enabled": true
+    },
+    {
+      "id": "blog-8",
+      "name": "Jim Bianco (宏观流动性与利率专家)",
+      "platform": "X (Twitter)",
+      "handle": "@biancoresearch",
+      "url": "https://x.com/biancoresearch",
+      "engine": "Ego Lite",
+      "enabled": true
+    }
+  ],
+  "telegram_channels": [
+    {
+      "name": "Walter Bloomberg (全球秒级突发)",
+      "handle": "tier10k",
+      "enabled": true
+    },
+    {
+      "name": "Lookonchain (聪明钱与巨鲸链上异动)",
+      "handle": "lookonchain",
+      "enabled": true
+    },
+    {
+      "name": "Unusual Whales (美股期权与暗池异动)",
+      "handle": "unusual_whales_news",
+      "enabled": true
+    },
+    {
+      "name": "Binance Official Alerts (全球币股)",
+      "handle": "binance_announcements",
+      "enabled": true
+    },
+    {
+      "name": "Bloomberg News Alert (彭博社快讯)",
+      "handle": "bloomberg_alert",
+      "enabled": true
+    },
+    {
+      "name": "WallStreetCN Express (华尔街见闻快讯)",
+      "handle": "wallstreetcn_express",
+      "enabled": true
+    }
+  ],
+  "discord_channels": [
+    {
+      "id": "dc-1",
+      "name": "OpenAI 官方 Announcements",
+      "mode": "RSSHub",
+      "channel_id": "974519864045756446",
+      "route": "/discord/channel/974519864045756446",
+      "url": "https://discord.com/channels/974519864045756446/974519864045756449",
+      "token": "",
+      "enabled": true
+    },
+    {
+      "id": "dc-2",
+      "name": "Midjourney 最新发布与公告",
+      "mode": "Ego Lite",
+      "channel_id": "662267976984297473",
+      "route": "",
+      "url": "https://discord.com/channels/662267976984297473/952771221915840552",
+      "token": "",
+      "enabled": true
+    },
+    {
+      "id": "dc-3",
+      "name": "Cursor / AI IDE 开发者技术讨论",
+      "mode": "Bot API",
+      "channel_id": "1092911964524679239",
+      "route": "",
+      "url": "https://discord.com/channels/1092911964524679239",
+      "token": "",
+      "enabled": true
+    },
+    {
+      "id": "dc-4",
+      "name": "Hugging Face 官方开源社区",
+      "mode": "RSSHub",
+      "channel_id": "879548962464493619",
+      "route": "/discord/channel/879548962464493619",
+      "url": "https://discord.com/channels/879548962464493619",
+      "token": "",
+      "enabled": true
+    },
+    {
+      "id": "dc-5",
+      "name": "Anthropic Claude 开发者讨论",
+      "mode": "Ego Lite",
+      "channel_id": "1158522774987034634",
+      "route": "",
+      "url": "https://discord.com/channels/1158522774987034634",
+      "token": "",
+      "enabled": true
+    }
+  ],
+  "substack_newsletters": [
+    {
+      "id": "sub-1",
+      "name": "SemiAnalysis (Dylan Patel · 半导体AI)",
+      "handle": "https://www.semianalysis.com/feed",
+      "enabled": true
+    },
+    {
+      "id": "sub-2",
+      "name": "The Macro Compass (Alf · 全球宏观流动性)",
+      "handle": "themacrocompass",
+      "enabled": true
+    },
+    {
+      "id": "sub-3",
+      "name": "Doomberg (能源与大宗商品买方视角)",
+      "handle": "doomberg",
+      "enabled": true
+    },
+    {
+      "id": "sub-4",
+      "name": "Not Boring (Packy McCormick · 科技战略)",
+      "handle": "https://notboring.co/feed",
+      "enabled": true
+    },
+    {
+      "id": "sub-5",
+      "name": "Pragmatic Engineer (Gergely · 软件工程)",
+      "handle": "pragmaticengineer",
+      "enabled": true
+    },
+    {
+      "id": "sub-6",
+      "name": "Stratechery (Ben Thompson · 科技商业)",
+      "handle": "stratechery",
+      "enabled": true
+    }
+  ],
+  "wechat_accounts": [
+    {
+      "id": "wx-1",
+      "name": "智东西 (AI算力与硬科技)",
+      "route": "/wechat/mp/msghistory/gh_49a9bbf6292b",
+      "enabled": true
+    },
+    {
+      "id": "wx-2",
+      "name": "半导体行业观察 (芯片与晶圆制造)",
+      "route": "/wechat/mp/msghistory/gh_23bb0d9e79cf",
+      "enabled": true
+    },
+    {
+      "id": "wx-3",
+      "name": "晚点LatePost (科技商业深度特稿)",
+      "route": "/wechat/mp/msghistory/gh_d80d2fb9aa6f",
+      "enabled": true
+    },
+    {
+      "id": "wx-4",
+      "name": "远川研究所 (产业与宏观资本特稿)",
+      "route": "/wechat/mp/msghistory/gh_c48b209d8469",
+      "enabled": true
+    },
+    {
+      "id": "wx-5",
+      "name": "机器之心 (前沿AI与大模型应用落地)",
+      "route": "/wechat/mp/msghistory/gh_f6a15234907a",
+      "enabled": true
+    }
+  ],
+  "hacker_news": [
+    {
+      "id": "hn-top",
+      "name": "Hacker News (Top 热门技术与创业讨论)",
+      "mode": "top",
+      "limit": 8,
+      "enabled": true
+    },
+    {
+      "id": "hn-show",
+      "name": "Show HN (全球工程师最新开源与创新工具)",
+      "mode": "show",
+      "limit": 5,
+      "enabled": true
+    },
+    {
+      "id": "hn-ask",
+      "name": "Ask HN (深度技术架构与工程经验探讨)",
+      "mode": "ask",
+      "limit": 5,
+      "enabled": true
+    }
+  ],
+  "reddit_subreddits": [
+    {
+      "id": "reddit-localllama",
+      "name": "r/LocalLLaMA (本地大模型实测与硬件评测)",
+      "subreddit": "LocalLLaMA",
+      "limit": 5,
+      "enabled": true
+    },
+    {
+      "id": "reddit-wsb",
+      "name": "r/wallstreetbets (散户与美股期权情绪雷达)",
+      "subreddit": "wallstreetbets",
+      "limit": 5,
+      "enabled": true
+    },
+    {
+      "id": "reddit-tech",
+      "name": "r/technology (全球科技产业与监管热议)",
+      "subreddit": "technology",
+      "limit": 5,
+      "enabled": true
+    },
+    {
+      "id": "reddit-ml",
+      "name": "r/MachineLearning (学术前沿与大模型架构讨论)",
+      "subreddit": "MachineLearning",
+      "limit": 4,
+      "enabled": true
+    },
+    {
+      "id": "reddit-stocks",
+      "name": "r/stocks (美股基本面与财报季买方观点)",
+      "subreddit": "stocks",
+      "limit": 4,
+      "enabled": true
+    },
+    {
+      "id": "reddit-singularity",
+      "name": "r/Singularity (通用人工智能 AGI 与技术奇点)",
+      "subreddit": "singularity",
+      "limit": 4,
+      "enabled": true
+    }
+  ],
+  "arxiv_categories": [
+    {
+      "id": "arxiv-hf",
+      "name": "Hugging Face Daily Papers (全球最热 AI 论文榜)",
+      "category": "trending",
+      "limit": 5,
+      "enabled": true
+    },
+    {
+      "id": "arxiv-ai",
+      "name": "ArXiv cs.AI (人工智能与通用大模型前沿)",
+      "category": "cs.AI",
+      "limit": 4,
+      "enabled": true
+    },
+    {
+      "id": "arxiv-cl",
+      "name": "ArXiv cs.CL (计算语言学与大语言模型)",
+      "category": "cs.CL",
+      "limit": 4,
+      "enabled": true
+    },
+    {
+      "id": "arxiv-cv",
+      "name": "ArXiv cs.CV (计算机视觉与多模态大模型)",
+      "category": "cs.CV",
+      "limit": 4,
+      "enabled": true
+    },
+    {
+      "id": "arxiv-ro",
+      "name": "ArXiv cs.RO (具身智能与机器人控制)",
+      "category": "cs.RO",
+      "limit": 4,
+      "enabled": true
+    }
+  ],
+  "sec_filings": {
+    "enabled": true,
+    "tickers": [
+      {
+        "symbol": "NVDA",
+        "name": "英伟达 (NVIDIA · 算力龙头)",
+        "enabled": true
+      },
+      {
+        "symbol": "TSLA",
+        "name": "特斯拉 (Tesla · Robotaxi/FSD)",
+        "enabled": true
+      },
+      {
+        "symbol": "AAPL",
+        "name": "苹果 (Apple · Apple Intelligence)",
+        "enabled": true
+      },
+      {
+        "symbol": "MSFT",
+        "name": "微软 (Microsoft · Azure/OpenAI)",
+        "enabled": true
+      },
+      {
+        "symbol": "GOOGL",
+        "name": "谷歌 (Alphabet · Gemini/TPU)",
+        "enabled": true
+      },
+      {
+        "symbol": "AMZN",
+        "name": "亚马逊 (Amazon · AWS/Trainium)",
+        "enabled": true
+      },
+      {
+        "symbol": "META",
+        "name": "Meta (Meta · LLaMA 开源生态)",
+        "enabled": true
+      },
+      {
+        "symbol": "TSM",
+        "name": "台积电 (TSMC · 先进晶圆代工)",
+        "enabled": true
+      },
+      {
+        "symbol": "PLTR",
+        "name": "Palantir (AI 国防与企业中枢)",
+        "enabled": true
+      },
+      {
+        "symbol": "AVGO",
+        "name": "博通 (Broadcom · 定制 ASIC/网络芯片)",
+        "enabled": true
+      },
+      {
+        "symbol": "ASML",
+        "name": "阿斯麦 (ASML · EUV/高数值孔径光刻机)",
+        "enabled": true
+      },
+      {
+        "symbol": "AMD",
+        "name": "超威半导体 (AMD · MI350/ROCm 生态)",
+        "enabled": true
+      },
+      {
+        "symbol": "BABA",
+        "name": "阿里巴巴 (Alibaba · 阿里云/通义千问)",
+        "enabled": true
+      }
+    ],
+    "target_forms": [
+      {
+        "code": "8-K",
+        "name": "重大突发事件 / 并购 / 重大合同",
+        "enabled": true
+      },
+      {
+        "code": "Form 4",
+        "name": "高管与大股东买入 / 减持交易",
+        "enabled": true
+      },
+      {
+        "code": "10-Q",
+        "name": "季度财务报告 (10-Q)",
+        "enabled": true
+      },
+      {
+        "code": "10-K",
+        "name": "年度报告 (10-K)",
+        "enabled": true
+      },
+      {
+        "code": "13F-HR",
+        "name": "顶级对冲基金季度持仓报告",
+        "enabled": true
+      },
+      {
+        "code": "6-K",
+        "name": "中概股海外上市重大披露",
+        "enabled": true
+      },
+      {
+        "code": "S-1",
+        "name": "重磅独角兽 IPO 招股说明书",
+        "enabled": true
+      }
+    ]
+  },
+  "macro_indicators": [
+    {
+      "id": "m-1",
+      "name": "美债 10 年期收益率",
+      "symbol": "^TNX",
+      "unit": "%",
+      "enabled": true
+    },
+    {
+      "id": "m-2",
+      "name": "美债 2 年期收益率",
+      "symbol": "2YY=F",
+      "unit": "%",
+      "enabled": true
+    },
+    {
+      "id": "m-3",
+      "name": "美元指数 (DXY)",
+      "symbol": "DX-Y.NYB",
+      "unit": "",
+      "enabled": true
+    },
+    {
+      "id": "m-4",
+      "name": "伦敦现货黄金",
+      "symbol": "GC=F",
+      "unit": "$",
+      "enabled": true
+    },
+    {
+      "id": "m-5",
+      "name": "WTI 纽约原油",
+      "symbol": "CL=F",
+      "unit": "$",
+      "enabled": true
+    },
+    {
+      "id": "m-6",
+      "name": "美股恐慌指数 (VIX)",
+      "symbol": "^VIX",
+      "unit": "",
+      "enabled": true
+    },
+    {
+      "id": "m-7",
+      "name": "离岸人民币 (USD/CNH)",
+      "symbol": "USDCNH=X",
+      "unit": "",
+      "enabled": true
+    },
+    {
+      "id": "m-8",
+      "name": "比特币现货 (BTC)",
+      "symbol": "BTC-USD",
+      "unit": "$",
+      "enabled": true
+    },
+    {
+      "id": "m-9",
+      "name": "以太坊现货 (ETH)",
+      "symbol": "ETH-USD",
+      "unit": "$",
+      "enabled": true
+    }
+  ]
+}
