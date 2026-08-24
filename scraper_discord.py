@@ -4,7 +4,7 @@ import requests
 import feedparser
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-SOURCES_FILE = os.path.join(CURRENT_DIR, "sources.json")
+from paths import SOURCES_FILE
 UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
 
 def fetch_discord_via_rsshub(route_or_channel_id, nodes=None):

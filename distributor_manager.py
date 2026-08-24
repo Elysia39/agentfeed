@@ -6,7 +6,7 @@ from distributor_obsidian import save_note_to_obsidian, load_obsidian_config
 from distributor_email import send_email_brief, load_email_config
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-SOURCES_FILE = os.path.join(CURRENT_DIR, "sources.json")
+from paths import SOURCES_FILE
 
 def load_distribution_settings():
     if os.path.exists(SOURCES_FILE):

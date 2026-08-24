@@ -3,7 +3,7 @@ import json
 import yfinance as yf
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-SOURCES_FILE = os.path.join(CURRENT_DIR, "sources.json")
+from paths import SOURCES_FILE
 
 DEFAULT_MACRO_LIST = [
     { "id": "m-1", "name": "美债 10 年期收益率", "symbol": "^TNX", "unit": "%", "enabled": True },

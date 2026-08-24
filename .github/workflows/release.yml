@@ -44,6 +44,14 @@ jobs:
           pyinstaller --noconfirm --onedir --windowed \
             --name "AgentFeed" \
             --icon "icon.icns" \
+            --collect-all "uvicorn" \
+            --collect-all "webview" \
+            --collect-all "fastapi" \
+            --hidden-import "server" \
+            --hidden-import "paths" \
+            --hidden-import "run_daily_brief" \
+            --hidden-import "llm_curator" \
+            --hidden-import "distributor_manager" \
             --add-data "web_admin.html:." \
             --add-data "icon.png:." \
             --add-data "sources.example.json:." \
@@ -58,6 +66,14 @@ jobs:
           pyinstaller --noconfirm --onedir --windowed `
             --name "AgentFeed" `
             --icon "icon.ico" `
+            --collect-all "uvicorn" `
+            --collect-all "webview" `
+            --collect-all "fastapi" `
+            --hidden-import "server" `
+            --hidden-import "paths" `
+            --hidden-import "run_daily_brief" `
+            --hidden-import "llm_curator" `
+            --hidden-import "distributor_manager" `
             --add-data "web_admin.html;." `
             --add-data "icon.png;." `
             --add-data "sources.example.json;." `
@@ -72,6 +88,14 @@ jobs:
           pyinstaller --noconfirm --onedir --windowed \
             --name "AgentFeed" \
             --icon "icon.png" \
+            --collect-all "uvicorn" \
+            --collect-all "webview" \
+            --collect-all "fastapi" \
+            --hidden-import "server" \
+            --hidden-import "paths" \
+            --hidden-import "run_daily_brief" \
+            --hidden-import "llm_curator" \
+            --hidden-import "distributor_manager" \
             --add-data "web_admin.html:." \
             --add-data "icon.png:." \
             --add-data "sources.example.json:." \

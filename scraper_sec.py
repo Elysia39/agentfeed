@@ -3,7 +3,7 @@ import json
 import requests
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-SOURCES_FILE = os.path.join(CURRENT_DIR, "sources.json")
+from paths import SOURCES_FILE
 CIK_CACHE_FILE = os.path.join(CURRENT_DIR, "sec_cik_cache.json")
 UA = "DailyIntelBriefApp (research_admin@domain.com)"
 

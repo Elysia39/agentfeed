@@ -28,8 +28,7 @@ from scraper_arxiv import fetch_all_arxiv_papers
 from render_feed import render_brief_html, build_rss_and_html
 from llm_curator import curate_daily_intel
 from distributor_manager import dispatch_all_channels
-
-SOURCES_FILE = os.path.join(CURRENT_DIR, "sources.json")
+from paths import SOURCES_FILE, HISTORY_FILE, get_resource_path
 
 def load_sources_config():
     if os.path.exists(SOURCES_FILE):

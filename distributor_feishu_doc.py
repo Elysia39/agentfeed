@@ -9,7 +9,7 @@ import datetime
 import requests
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-SOURCES_FILE = os.path.join(CURRENT_DIR, "sources.json")
+from paths import SOURCES_FILE
 
 def load_sources():
     if os.path.exists(SOURCES_FILE):

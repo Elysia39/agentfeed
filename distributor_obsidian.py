@@ -6,7 +6,7 @@ import shutil
 from llm_curator import build_obsidian_markdown
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-SOURCES_FILE = os.path.join(CURRENT_DIR, "sources.json")
+from paths import SOURCES_FILE
 
 def get_obsidian_bin():
     return shutil.which("obsidian") or shutil.which("obsidian-cli") or os.path.expanduser("~/.local/bin/obsidian")

@@ -18,15 +18,8 @@ from distributor_feishu import send_feishu_brief
 from distributor_feishu_doc import create_feishu_doc
 from distributor_obsidian import save_note_to_obsidian, get_obsidian_vaults
 from distributor_email import send_email_brief
-
-CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-SOURCES_FILE = os.path.join(CURRENT_DIR, "sources.json")
-HISTORY_FILE = os.path.join(CURRENT_DIR, "feed_history.json")
-HTML_FILE = os.path.join(CURRENT_DIR, "web_admin.html")
-ICON_FILE = os.path.join(CURRENT_DIR, "icon.png")
+from paths import SOURCES_FILE, HISTORY_FILE, HTML_FILE, ICON_FILE, get_resource_path
 import sys
-PYTHON_BIN = sys.executable
-SCRIPT_PATH = os.path.join(CURRENT_DIR, "run_daily_brief.py")
 
 app = FastAPI(
     title="AgentFeed - Universal Perception & Ingestion Framework for AI Agents",
@@ -292,11 +285,15 @@ async def api_get_history():
 @app.post("/api/trigger")
 async def api_trigger():
     try:
-        proc = subprocess.run([PYTHON_BIN, SCRIPT_PATH], capture_output=True, text=True, timeout=120)
-        return {
-            "status": "success" if proc.returncode == 0 else "error",
-            "output": proc.stdout + ("\n" + proc.stderr if proc.stderr else "")
-        }
+        from run_daily_brief import generate_daily_brief
+        import io
+        from contextlib import redirect_stdout, redirect_stderr
+        
+        f = io.StringIO()
+        with redirect_stdout(f), redirect_stderr(f):
+            generate_daily_brief()
+        output = f.getvalue()
+        return {"status": "success", "output": output}
     except Exception as e:
         return {"status": "error", "output": str(e)}
 

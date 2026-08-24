@@ -4,7 +4,7 @@ import requests
 import datetime
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-SOURCES_FILE = os.path.join(CURRENT_DIR, "sources.json")
+from paths import SOURCES_FILE
 
 def load_feishu_config():
     if os.path.exists(SOURCES_FILE):
