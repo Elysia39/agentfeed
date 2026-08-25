@@ -312,7 +312,7 @@ async def api_get_env_status():
         except Exception:
             pass
     camoufox_cur_ver = get_tool_version("camoufox", "camoufox-tool") if camoufox_check["installed"] else "未安装"
-    camoufox_latest_ver = "v0.4.11"
+    camoufox_latest_ver = "v0.5.5"
 
     # 2. Ego Lite
     ego_check = check_tool(
@@ -320,7 +320,7 @@ async def api_get_env_status():
         ["/Applications/Ego Lite.app", "/Applications/ego-browser.app", "/Applications/EgoBrowser.app", "~/Applications/Ego Lite.app", "/Applications/EgoLite.app"]
     )
     ego_cur_ver = get_tool_version("ego", "ego-browser", ["/Applications/Ego Lite.app", "/Applications/ego-browser.app"]) if ego_check["installed"] else "未安装"
-    ego_latest_ver = "v1.2.3"
+    ego_latest_ver = "v0.4.7+"
 
     # 3. Defuddle
     defuddle_check = check_tool(
@@ -328,7 +328,7 @@ async def api_get_env_status():
         ["~/.local/bin/defuddle", "/opt/homebrew/bin/defuddle", "/usr/local/bin/defuddle"]
     )
     defuddle_cur_ver = get_tool_version("defuddle", "defuddle") if defuddle_check["installed"] else "未安装"
-    defuddle_latest_ver = "v1.0.0"
+    defuddle_latest_ver = "v0.19.3"
 
     # 4. Feishu
     feishu_check = check_tool(
@@ -336,7 +336,7 @@ async def api_get_env_status():
         ["/Applications/Feishu.app", "/Applications/Lark.app", "~/Applications/Feishu.app", "/opt/homebrew/bin/feishu-cli", "~/.local/bin/feishu-cli"]
     )
     feishu_cur_ver = get_tool_version("feishu", "feishu-cli", ["/Applications/Feishu.app", "/Applications/Lark.app"]) if feishu_check["installed"] else "未安装"
-    feishu_latest_ver = "v7.40+"
+    feishu_latest_ver = "v7.40+ / 131.0+"
 
     # 5. Obsidian
     obsidian_check = check_tool(
@@ -344,7 +344,7 @@ async def api_get_env_status():
         ["~/.local/bin/obsidian", "/opt/homebrew/bin/obsidian", "/Applications/Obsidian.app"]
     )
     obsidian_cur_ver = get_tool_version("obsidian", "obsidian", ["/Applications/Obsidian.app"]) if obsidian_check["installed"] else "未安装"
-    obsidian_latest_ver = "v1.8.7"
+    obsidian_latest_ver = "v1.8+ / 1.12.7"
 
     return {
         "agentfeed": {
@@ -370,7 +370,7 @@ async def api_get_env_status():
             "latest_version": camoufox_latest_ver,
             "status_badge": "最新版" if camoufox_check["installed"] else "未安装",
             "required_for": "网站媒体、深度专栏等抗反爬免登录抓取",
-            "install_cmd": "pip install 'camoufox[geoip]' && camoufox fetch",
+            "install_cmd": "python3 -m pip install --upgrade --break-system-packages 'camoufox[geoip]'",
             "official_url": "https://github.com/daijro/camoufox",
         },
         "ego_browser": {
@@ -380,7 +380,7 @@ async def api_get_env_status():
             "desc": "专为 AI Agent 打造的 Chromium 隔离会话浏览器，复用登录态免竞争自动化操作。",
             "current_version": ego_cur_ver,
             "latest_version": ego_latest_ver,
-            "status_badge": "已就绪" if ego_check["installed"] else "未安装",
+            "status_badge": "最新版" if ego_check["installed"] else "未安装",
             "required_for": "网页免登录自动化与多标签页深度采集",
             "install_cmd": "open https://ego.fun",
             "official_url": "https://ego.fun",
@@ -392,9 +392,9 @@ async def api_get_env_status():
             "desc": "智能网页正文与高密度 Markdown 提取引擎，自动剔除广告、导航栏等干扰元素。",
             "current_version": defuddle_cur_ver,
             "latest_version": defuddle_latest_ver,
-            "status_badge": "已就绪" if defuddle_check["installed"] else "未安装",
+            "status_badge": "最新版" if defuddle_check["installed"] else "未安装",
             "required_for": "全网媒体网站净版正文与长文提炼",
-            "install_cmd": "npm install -g defuddle",
+            "install_cmd": "npm install -g defuddle@latest",
             "official_url": "https://github.com/defuddle/defuddle",
         },
         "feishu": {
@@ -406,7 +406,7 @@ async def api_get_env_status():
             "latest_version": feishu_latest_ver,
             "status_badge": "最新版" if feishu_check["installed"] else "未安装",
             "required_for": "每日全源智能简报自动推送至飞书群、自动生成飞书云文档知识库",
-            "install_cmd": "brew install --cask feishu && npm install -g feishu-cli",
+            "install_cmd": "npm install -g feishu-cli@latest",
             "official_url": "https://www.feishu.cn/download",
         },
         "obsidian": {
@@ -418,7 +418,7 @@ async def api_get_env_status():
             "latest_version": obsidian_latest_ver,
             "status_badge": "最新版" if obsidian_check["installed"] else "未安装",
             "required_for": "每日简报自动归档到本地 Obsidian Vault 并建立双链",
-            "install_cmd": "brew install obsidian && npm install -g obsidian-cli",
+            "install_cmd": "npm install -g obsidian-cli@latest",
             "official_url": "https://obsidian.md",
         }
     }
@@ -450,11 +450,11 @@ async def api_update_tool(request: Request):
                 env["PATH"] = f"{p}:{env.get('PATH', '')}"
 
         update_commands = {
-            "camoufox": "pip install --upgrade 'camoufox[geoip]' && camoufox fetch",
-            "defuddle": "npm install -g defuddle@latest",
-            "feishu": "npm install -g feishu-cli@latest",
-            "obsidian": "npm install -g obsidian-cli@latest",
-            "agentfeed": "git pull origin main",
+            "camoufox": "python3 -m pip install --upgrade --break-system-packages 'camoufox[geoip]' 2>&1 || pip3 install --upgrade 'camoufox[geoip]' 2>&1",
+            "defuddle": "npm install -g defuddle@latest 2>&1",
+            "feishu": "npm install -g feishu-cli@latest 2>&1",
+            "obsidian": "npm install -g obsidian-cli@latest 2>&1",
+            "agentfeed": "git pull origin main 2>&1",
         }
 
         if tool_key == "ego_browser":
@@ -467,7 +467,7 @@ async def api_update_tool(request: Request):
             }
 
         if tool_key == "all":
-            cmd = "pip install --upgrade 'camoufox[geoip]' && camoufox fetch; npm install -g defuddle@latest feishu-cli@latest obsidian-cli@latest"
+            cmd = "python3 -m pip install --upgrade --break-system-packages 'camoufox[geoip]' 2>&1 || pip3 install --upgrade 'camoufox[geoip]' 2>&1; npm install -g defuddle@latest feishu-cli@latest obsidian-cli@latest 2>&1"
         elif tool_key in update_commands:
             cmd = update_commands[tool_key]
         else:

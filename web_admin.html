@@ -3705,6 +3705,12 @@
     }
 
     async function updateTool(toolKey, btn = null) {
+      // If modal is hidden, open it first so user sees live logs
+      const modal = document.getElementById('tooling-modal');
+      if (modal && modal.classList.contains('hidden')) {
+        openToolingModal(toolKey === 'all' ? null : toolKey);
+      }
+
       let originalHtml = '';
       if (btn) {
         originalHtml = btn.innerHTML;
@@ -3719,11 +3725,11 @@
 
       if (logPanel && logContent) {
         logPanel.classList.remove('hidden');
-        logTitle.innerText = `正在更新组件: ${toolKey}...`;
-        logContent.innerText = `⚡ 正在执行 ${toolKey} 在线自动升级，请稍候...\n`;
+        logTitle.innerText = toolKey === 'all' ? '正在全量更新所有底层驱动组件...' : `正在更新组件: ${toolKey}...`;
+        logContent.innerText = `⚡ 正在执行 ${toolKey === 'all' ? '全量底层驱动' : toolKey} 在线自动升级，请稍候...\n`;
       }
 
-      showToast(`⚡ 正在为您在线更新 ${toolKey}，请稍候...`);
+      showToast(`⚡ 正在为您在线更新 ${toolKey === 'all' ? '全部核心驱动' : toolKey}，请稍候...`);
 
       try {
         const res = await fetch('/api/tools/update', {
