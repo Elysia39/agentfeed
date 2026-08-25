@@ -123,32 +123,32 @@ def render_brief_html(lead_summary, macro_indicators, sec_filings, tg_messages, 
     </div>\n"""
         content += "  </div>\n"
 
-    # 3. SEC EDGAR Filings
+    # 3. SEC Filings / Official disclosures
     if sec_filings:
-        content += "  <div class=\"section-title\">🏛️ SEC 官方重大披露 & 高管申报 (8-K / 13-F / Form 4)</div>\n"
+        content += "  <div class=\"section-title\">🏛️ 官方重要监管与公告披露</div>\n"
         for sf in sec_filings:
             content += f"""  <div class="news-item">
-    <span class="tag tag-sec">SEC {sf.get('form', '')}</span>
+    <span class="tag tag-sec">官方 {sf.get('form', '')}</span>
     <span style="font-weight:700; margin-left:6px; color:#111827;">[{sf.get('ticker', '')}]</span>
     <span style="font-size:12px; color:#6b7280; margin-left:6px;">{sf.get('date', '')}</span>
     <div style="font-size:13px; color:#374151; margin-top:4px;">{highlight_keywords(sf.get('description', ''), watchlist)}</div>
-    <a class="source-link" href="{sf.get('url', '')}" target="_blank">📄 查看 SEC 原生披露文件 ↗</a>
+    <a class="source-link" href="{sf.get('url', '')}" target="_blank">📄 查看官方原生披露文件 ↗</a>
   </div>\n"""
 
     # 4. Substack Deep Dives
     if sub_articles:
-        content += "  <div class=\"section-title\">📚 Substack 顶级独立投研与行业专栏</div>\n"
+        content += "  <div class=\"section-title\">📑 深度专栏与前沿观察 (Substack)</div>\n"
         for sub in sub_articles:
             content += f"""  <div class="news-item">
     <span class="tag tag-sub">Substack · {html.escape(sub.get('newsletter', ''))}</span>
     <h4 style="margin:4px 0; font-size:14px; color:#111827;">{highlight_keywords(sub.get('title', ''), watchlist)}</h4>
     <p style="margin:0; font-size:13px; color:#4b5563;">{highlight_keywords(sub.get('summary', ''), watchlist)}</p>
-    {f'<a class="source-link" href="{sub["link"]}" target="_blank">🔗 阅读深度研报 ↗</a>' if sub.get('link') else ''}
+    {f'<a class="source-link" href="{sub["link"]}" target="_blank">🔗 阅读深度专栏 ↗</a>' if sub.get('link') else ''}
   </div>\n"""
 
     # 5. Telegram Intelligence
     if tg_messages:
-        content += "  <div class=\"section-title\">✈️ Telegram 一线快讯与突发</div>\n"
+        content += "  <div class=\"section-title\">✈️ Telegram 实时快讯与突发</div>\n"
         for tg in tg_messages:
             content += f"""  <div class="news-item">
     <span class="tag tag-tg">{html.escape(tg.get('channel', 'TG'))}</span>
@@ -158,7 +158,7 @@ def render_brief_html(lead_summary, macro_indicators, sec_filings, tg_messages, 
 
     # 6. Discord Communities
     if dc_messages:
-        content += "  <div class=\"section-title\">🎮 Discord 官方公告与技术讨论</div>\n"
+        content += "  <div class=\"section-title\">🎮 Discord 社区动态与技术讨论</div>\n"
         for dc in dc_messages:
             content += f"""  <div class="news-item">
     <span class="tag tag-dc">Discord · {html.escape(dc.get('source', ''))}</span>
@@ -168,7 +168,7 @@ def render_brief_html(lead_summary, macro_indicators, sec_filings, tg_messages, 
 
     # 7. WeChat Deep Articles
     if wx_articles:
-        content += "  <div class=\"section-title\">💬 微信公众号深度产业专栏</div>\n"
+        content += "  <div class=\"section-title\">💬 微信公众号深度特稿</div>\n"
         for wx in wx_articles:
             content += f"""  <div class="news-item">
     <span class="tag tag-wx">{html.escape(wx.get('source', '微信专栏'))}</span>
@@ -189,7 +189,7 @@ def render_brief_html(lead_summary, macro_indicators, sec_filings, tg_messages, 
             content += f"""  <div class="news-item">
     <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
       <span class="tag tag-cat">{html.escape(source)}</span>
-      {f'<span class="tag tag-watchlist">🔥 重点标的</span>' if is_watchlist else ''}
+      {f'<span class="tag tag-watchlist">🔥 重点关注</span>' if is_watchlist else ''}
     </div>
     <h4 style="margin:4px 0 4px 0; font-size:14px; color:#111827;">{highlight_keywords(item.get('title', ''), watchlist)}</h4>
     <p style="margin:0; font-size:13px; color:#4b5563;">{highlight_keywords(item.get('summary', ''), watchlist)}</p>
@@ -198,7 +198,7 @@ def render_brief_html(lead_summary, macro_indicators, sec_filings, tg_messages, 
 
     # 9. X (Twitter) Insights
     if x_insights:
-        content += "  <div class=\"section-title\">🔵 博主大V 核心洞察</div>\n"
+        content += "  <div class=\"section-title\">🔵 行业大V与博主核心洞察</div>\n"
         for tweet in x_insights:
             author = tweet.get("author", "博主")
             text = tweet.get("text", "")
@@ -208,12 +208,12 @@ def render_brief_html(lead_summary, macro_indicators, sec_filings, tg_messages, 
     <div class="quote-box">“{highlight_keywords(text, watchlist)}”</div>
   </div>\n"""
 
-    # 10. Futu / Market news
+    # 10. Industry / Fast news
     if market_news:
-        content += "  <div class=\"section-title\">🟡 盘前异动与市场快讯</div>\n"
+        content += "  <div class=\"section-title\">🟡 实时要闻与行业快讯</div>\n"
         for m in market_news:
             content += f"""  <div class="news-item">
-    <span class="tag tag-cat">市场快讯</span>
+    <span class="tag tag-cat">要闻快讯</span>
     <h4 style="margin:4px 0 4px 0; font-size:14px; color:#111827;">{highlight_keywords(m.get('title', ''), watchlist)}</h4>
     {f'<p style="margin:0; font-size:13px; color:#4b5563;">{highlight_keywords(m.get("text", ""), watchlist)}</p>' if m.get('text') and m.get('text') != m.get('title') else ''}
   </div>\n"""
@@ -245,8 +245,8 @@ def build_rss_and_html(rendered_html_body):
     time_str = local_time.strftime("%H:%M")
     public_domain = R2_CONFIG["public_domain"].rstrip("/")
 
-    guid_val = f"evening-brief-{today_str}-{int(now.timestamp())}"
-    issue_title = f"📅 【晚报内参】{today_str} ({time_str}) 宏观、SEC披露、Substack研报与全球要闻"
+    guid_val = f"daily-brief-{today_str}-{int(now.timestamp())}"
+    issue_title = f"📅 【AgentFeed 每日简报】{today_str} ({time_str}) 全源情报与智能洞察"
 
     current_item = {
         "title": issue_title,

@@ -31,20 +31,20 @@ def load_obsidian_config():
                 sdata = json.load(f)
                 return sdata.get("distribution_settings", {}).get("obsidian", {
                     "enabled": True,
-                    "vault": "Investing",
-                    "folder": "Daily Intel"
+                    "vault": "AgentFeed",
+                    "folder": "Daily Brief"
                 })
         except Exception:
             pass
-    return {"enabled": True, "vault": "Investing", "folder": "Daily Intel"}
+    return {"enabled": True, "vault": "AgentFeed", "folder": "Daily Brief"}
 
 def save_note_to_obsidian(curated_data, custom_vault=None, custom_folder=None):
     cfg = load_obsidian_config()
-    vault = custom_vault or cfg.get("vault", "Investing")
-    folder = (custom_folder or cfg.get("folder", "Daily Intel")).strip().strip("/")
+    vault = custom_vault or cfg.get("vault", "AgentFeed")
+    folder = (custom_folder or cfg.get("folder", "Daily Brief")).strip().strip("/")
 
     today_str = datetime.date.today().strftime("%Y-%m-%d")
-    file_name = f"{today_str}-晚报内参.md"
+    file_name = f"AgentFeed-{today_str}.md"
     file_path = f"{folder}/{file_name}" if folder else file_name
 
     md_content = build_obsidian_markdown(curated_data)

@@ -212,12 +212,12 @@ def call_local_agent(messages, cfg):
                 return proc.stdout.strip()
         except Exception as e:
             print(f"⚠️ claude CLI 调用未就绪: {e}")
-            
-    raise RuntimeError("本地 Agent CLI 未响应，无缝转入本地高性能规则引擎。")
+
+    return None
 
 def fallback_rule_curate(raw_items, macro_indicators, sec_filings, sub_articles, tg_items, dc_items, wx_items):
     """
-    High-quality local fallback curation if LLM is disabled, offline or using local agent.
+    High-quality local universal fallback curation if LLM is disabled, offline or using local agent.
     """
     seen_titles = set()
     cleaned_news = []
@@ -230,49 +230,58 @@ def fallback_rule_curate(raw_items, macro_indicators, sec_filings, sub_articles,
             cleaned_news.append(item)
             
     categories = {
-        "宏观流动性与大类资产": [],
-        "AI算力与前沿科技": [],
-        "美股核心公司与财报": [],
-        "全球市场与行业要闻": []
+        "🤖 AI 与前沿科技": [],
+        "💡 创新产品与开源工具": [],
+        "🌐 商业趋势与产业观察": [],
+        "💻 编程工程与极客技术": [],
+        "🌍 全球热点与深度资讯": []
     }
     
     for itm in cleaned_news:
         t_low = itm.get("title", "").lower() + " " + itm.get("summary", "").lower()
-        if any(w in t_low for w in ["ai", "gpu", "英伟达", "nvda", "tsmc", "台积电", "芯片", "半导体", "模型", "openai", "blackwell"]):
-            categories["AI算力与前沿科技"].append(itm)
-        elif any(w in t_low for w in ["美联储", "降息", "加息", "通胀", "cpi", "非农", "美债", "美元", "汇率", "fomc"]):
-            categories["宏观流动性与大类资产"].append(itm)
-        elif any(w in t_low for w in ["财报", "营收", "利润", "sec", "披露", "高管", "减持", "aapl", "msft", "tsla", "meta", "goog"]):
-            categories["美股核心公司与财报"].append(itm)
+        if any(w in t_low for w in ["ai", "gpu", "大模型", "llm", "claude", "gpt", "deepseek", "openai", "gemini", "agent", "模型"]):
+            categories["🤖 AI 与前沿科技"].append(itm)
+        elif any(w in t_low for w in ["github", "开源", "python", "rust", "code", "dev", "架构", "linux", "api", "framework"]):
+            categories["💻 编程工程与极客技术"].append(itm)
+        elif any(w in t_low for w in ["product", "app", "发布", "上线", "工具", "体验", "设计", "ui", "ux", "show hn"]):
+            categories["💡 创新产品与开源工具"].append(itm)
+        elif any(w in t_low for w in ["商业", "创投", "营收", "财报", "融资", "收购", "战略", "市场", "经济", "企业"]):
+            categories["🌐 商业趋势与产业观察"].append(itm)
         else:
-            categories["全球市场与行业要闻"].append(itm)
+            categories["🌍 全球热点与深度资讯"].append(itm)
             
-    lead = "今日宏观利率与汇率窄幅整理，半导体AI产业链维持活跃，重点关注标的最新申报与行业深度研报。"
+    # Clean empty categories
+    categories = {k: v for k, v in categories.items() if len(v) > 0}
+    if not categories:
+        categories["🌍 精选资讯"] = cleaned_news
+            
+    lead = "全源信息感知已完成，各领域最新前沿进展、创新项目与行业动态已完成智能提炼与结构化呈现。"
     
     return {
         "lead_summary": lead,
         "categories": categories,
-        "sec_filings": sec_filings[:6],
-        "macro_indicators": macro_indicators,
-        "substack_articles": sub_articles[:4],
-        "telegram_alerts": tg_items[:4],
-        "discord_alerts": dc_items[:4],
-        "wechat_articles": wx_items[:4]
+        "sec_filings": sec_filings[:6] if sec_filings else [],
+        "macro_indicators": macro_indicators if macro_indicators else [],
+        "substack_articles": sub_articles[:5],
+        "telegram_alerts": tg_items[:5],
+        "discord_alerts": dc_items[:5],
+        "wechat_articles": wx_items[:5]
     }
 
 def curate_daily_intel(raw_items, macro_indicators, sec_filings, sub_articles, tg_items, dc_items, wx_items):
     """
-    Main orchestration function for LLM Curation (去重、分类、摘要、买方提炼).
-    Supports: OpenAI Compatible, OpenAI Responses, Google Gemini, Anthropic Claude, Local Agent Fallback.
+    Main orchestration function for Universal LLM Curation (跨源去重、全领域分类、核心事实与洞察提炼).
+    Supports all professions: Developers, Product Managers, Researchers, Founders, Creators, Knowledge Workers.
     """
     cfg = load_llm_config()
     provider = cfg.get("provider", "openai_compatible")
     
     if not cfg.get("enabled", False) or (provider != "local_agent" and not cfg.get("api_key", "").strip()):
-        print(f"ℹ️ LLM 未配置外置 API Key，默认使用电脑本地 Agent / 高性能规则梳理引擎。")
+        print(f"ℹ️ LLM 未配置外置 API Key，默认使用电脑本地 Agent / 高性能通用规则梳理引擎。")
         return fallback_rule_curate(raw_items, macro_indicators, sec_filings, sub_articles, tg_items, dc_items, wx_items)
         
-    print(f"🤖 正在调用大模型 [协议: {provider}, 模型: {cfg.get('model', 'deepseek-chat')}] 对全源数据进行买方级去重、分类与结构化摘要...")
+    custom_focus = cfg.get("custom_focus", "").strip() or "科技前沿、AI与开源工具、产品设计、商业观察、工程技术与全球热点"
+    print(f"🤖 正在调用通用大模型 [协议: {provider}, 模型: {cfg.get('model', 'deepseek-chat')}] 对全源信息进行通用智能提炼 (关注方向: {custom_focus})...")
     
     # Pack input context for LLM
     news_input = []
@@ -281,46 +290,43 @@ def curate_daily_intel(raw_items, macro_indicators, sec_filings, sub_articles, t
             "id": idx + 1,
             "source": item.get("source", "资讯"),
             "title": item.get("title", ""),
-            "summary": item.get("summary", "")[:200],
+            "summary": item.get("summary", "")[:220],
             "link": item.get("link", "")
         })
         
-    system_prompt = """你是一位资深的华尔街买方投资经理与宏观科技策略分析师。
-你的任务是将当天采集到的多渠道海量原始资讯进行「买方级专业梳理」：
+    system_prompt = f"""你是一位全领域顶尖的 AI 首席情报官与全能知识助理（Universal Information Curator）。
+你的任务是将当天从多渠道采集的海量原始资讯进行高信息密度、专业、客观的智能梳理，适用于各行各业的专业人士、工程师、产品经理、创作者、学者与知识探索者：
 1. 【去重与合并】：将报道同一事件的多条快讯合并为一条最完整、高密度的信息。
-2. 【买方深度摘要】：每条保留的新闻提炼出「核心事实 + 逻辑推演/影响 + 涉及标的Ticker」。
-3. 【多维行业分类】：将新闻归入以下分类之一：
-   - 宏观流动性与大类资产
-   - AI算力与半导体产业链
-   - 美股核心公司与财报披露
-   - 加密资产与前沿科技
-   - 全球商业与行业精选
-4. 【生成 Lead 速览】：输出 1-2 句高信息密度的今日大盘与行业核心结论。
+2. 【核心提炼】：每条保留的新闻提炼出「核心事实 + 关键洞察/启发/影响 + 关键实体/技术/话题标签(tags)」。
+3. 【多维通用分类】：将新闻归入清晰的通用分类（如：🤖 AI与前沿科技、💡 创新产品与工具、🌐 商业洞察与产业观察、💻 编程工程与极客技术、🌍 全球热点与深度资讯等）。
+4. 【生成 Lead 速览】：输出 1-2 句全局高度凝练的今日核心全局总结。
+
+用户关注的核心偏好与重点方向为：【{custom_focus}】（请结合用户偏好提炼重点，同时兼顾全局完整视野）。
 
 你必须严格以合法的 JSON 格式返回，JSON 结构如下：
-{
-  "lead_summary": "今日核心全局总结（2句话以内）",
+{{
+  "lead_summary": "今日核心全局总结（2句话以内，高信息密度）",
   "curated_categories": [
-    {
+    {{
       "category_name": "分类名称",
       "items": [
-        {
+        {{
           "title": "精炼后的标题",
           "facts": "核心事实陈述（50字内）",
-          "impact": "对市场/产业的潜在影响分析（50字内）",
-          "tickers": ["NVDA", "TSM"],
+          "impact": "关键洞察或启发/潜在影响（50字内）",
+          "tags": ["关键词/标签1", "标签2"],
           "source": "来源媒体",
           "link": "原文链接"
-        }
+        }}
       ]
-    }
+    }}
   ]
-}"""
+}}"""
 
-    user_prompt = f"""以下是今日收集到的候选新闻列表（共 {len(news_input)} 条）：
+    user_prompt = f"""以下是今日从各渠道收集到的候选资讯列表（共 {len(news_input)} 条）：
 {json.dumps(news_input, ensure_ascii=False, indent=1)}
 
-请进行去重、深度买方摘要与分类，直接输出 JSON 结果："""
+请进行跨源去重、核心事实与洞察提炼，直接输出标准 JSON 结果："""
 
     messages = [
         {"role": "system", "content": system_prompt},
@@ -354,9 +360,9 @@ def curate_daily_intel(raw_items, macro_indicators, sec_filings, sub_articles, t
             cat_name = cat.get("category_name", "精选资讯")
             cat_map[cat_name] = cat.get("items", [])
             
-        print("✅ 大模型智能梳理完成！去重并提炼出结构化买方晚报。")
+        print("✅ 大模型通用智能梳理完成！已生成全景结构化简报。")
         return {
-            "lead_summary": curated_data.get("lead_summary", "今日宏观与全球核心资产平稳。"),
+            "lead_summary": curated_data.get("lead_summary", "今日全源信息已完成智能感知与结构化梳理。"),
             "categories": cat_map,
             "sec_filings": sec_filings,
             "macro_indicators": macro_indicators,
@@ -366,7 +372,7 @@ def curate_daily_intel(raw_items, macro_indicators, sec_filings, sub_articles, t
             "wechat_articles": wx_items
         }
     except Exception as e:
-        print(f"⚠️ LLM 梳理发生异常: {e}，自动降级为本地高性能规则引擎。")
+        print(f"⚠️ LLM 梳理发生异常: {e}，自动降级为本地通用规则引擎。")
         return fallback_rule_curate(raw_items, macro_indicators, sec_filings, sub_articles, tg_items, dc_items, wx_items)
 
 # ========== Multi-format Converters ==========
@@ -389,54 +395,51 @@ def build_obsidian_markdown(curated_result):
 
     md = f"""---
 date: {today_str}
-type: 晚报内参
+type: AgentFeed 每日简报
 tags:
-  - 每日内参
-  - 投研简报
-  - 全球宏观
+  - AgentFeed
+  - 每日精选
+  - 全源情报
 updated: {now_str}
 ---
 
-# 📰 全球宏观与市场晚报内参 · {today_str}
+# 📰 AgentFeed 每日全源智能简报 · {today_str}
 
 > [!abstract] 📌 今日核心速览 (Lead Summary)
 > {lead}
 
----
-
-## 📊 全球宏观与大类资产实时看板
-
-| 指标名称 | 代码/标的 | 最新行情 | 当日涨跌 |
-| :--- | :--- | :--- | :--- |
 """
-    for m in macro:
-        sym = m.get("symbol", "")
-        name = m.get("name", sym)
-        val = m.get("value", "--")
-        chg = m.get("change", "--")
-        status = m.get("status", "up")
-        arrow = "🔺" if status == "up" else "🔻"
-        md += f"| **{name}** | `[[{sym}]]` | **{val}** | {arrow} `{chg}` |\n"
+    if macro:
+        md += "---\n\n## 📊 实时数据与核心指标追踪\n\n"
+        md += "| 指标名称 | 代码/标的 | 最新行情 | 当日变动 |\n| :--- | :--- | :--- | :--- |\n"
+        for m in macro:
+            sym = m.get("symbol", "")
+            name = m.get("name", sym)
+            val = m.get("value", "--")
+            chg = m.get("change", "--")
+            status = m.get("status", "up")
+            arrow = "🔺" if status == "up" else "🔻"
+            md += f"| **{name}** | `[[{sym}]]` | **{val}** | {arrow} `{chg}` |\n"
 
     if sec_filings:
-        md += "\n---\n\n## 🏛️ SEC EDGAR 官方重大申报与持仓变动\n\n"
+        md += "\n---\n\n## 🏛️ 重要监管与官方申报披露\n\n"
         for s in sec_filings:
             ticker = s.get("ticker", "")
             form = s.get("form", "")
             desc = s.get("description", "")
             date = s.get("date", "")
             url = s.get("url", "")
-            md += f"- **[[{ticker}]]** `Form {form}` ({date}): {desc} [🔗 SEC 原文]({url})\n"
+            md += f"- **[[{ticker}]]** `Form {form}` ({date}): {desc} [🔗 官方原文]({url})\n"
 
     for cat_name, items in categories.items():
         if not items:
             continue
-        md += f"\n---\n\n## 🔥 {cat_name}\n\n"
+        md += f"\n---\n\n## {cat_name}\n\n"
         for itm in items:
             title = itm.get("title", "")
             facts = itm.get("facts", itm.get("summary", ""))
             impact = itm.get("impact", "")
-            tickers = itm.get("tickers", [])
+            tags = itm.get("tags", itm.get("tickers", []))
             source = itm.get("source", "")
             link = itm.get("link", "")
             
@@ -446,32 +449,34 @@ updated: {now_str}
                 if link:
                     md += f" · [查看原文]({link})"
                 md += "\n\n"
-            md += f"- **事实陈述**: {facts}\n"
+            if facts:
+                md += f"- **核心事实**: {facts}\n"
             if impact:
-                md += f"- **逻辑推演**: {impact}\n"
-            if tickers:
-                ticker_links = " ".join([f"[[{t}]]" for t in tickers])
-                md += f"- **涉及标的**: {ticker_links}\n"
+                md += f"- **核心洞察**: {impact}\n"
+            if tags:
+                tag_links = " ".join([f"[[{t}]]" for t in tags])
+                md += f"- **标签**: {tag_links}\n"
             md += "\n"
 
     if substack:
-        md += "\n---\n\n## 📚 Substack 顶级独立投研专栏\n\n"
+        md += "\n---\n\n## 📑 深度专栏与前沿观察\n\n"
         for sub in substack:
             md += f"- **[{sub.get('title', '')}]({sub.get('link', '')})** — *{sub.get('author', '')} ({sub.get('date', '')})*\n  > {sub.get('summary', '')}\n"
 
     if tg:
-        md += "\n---\n\n## ✈️ Telegram 实时突发快讯\n\n"
+        md += "\n---\n\n## ✈️ Telegram 实时快讯\n\n"
         for t in tg:
             md += f"- **[{t.get('channel', 'TG')}]** {t.get('content', '')}\n"
 
     if dc:
-        md += "\n---\n\n## 🎮 Discord 社区精选动态\n\n"
+        md += "\n---\n\n## 🎮 Discord 社区动态\n\n"
         for d in dc:
             md += f"- **[{d.get('author', d.get('channel', 'Discord'))}]** {d.get('content', '')}\n"
 
     if wx:
-        md += "\n---\n\n## 💬 微信公众号深度纪要\n\n"
+        md += "\n---\n\n## 💬 微信公众号深度特稿\n\n"
         for w in wx:
             md += f"- **[{w.get('title', '')}]({w.get('link', '')})**\n  > {w.get('summary', '')}\n"
 
     return md
+

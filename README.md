@@ -2,8 +2,8 @@
 
 # 📡 AgentFeed
 
-### The Universal Information Perception, LLM Curation & Desktop Hub for AI Agents
-**专为各大 AI Agent 打造的全源信息感知、大模型智能梳理、多渠道分发与原生桌面应用**
+### The Universal Information Perception, LLM Curation & Desktop Hub for Everyone
+**全行业、全职业通用的 AI 全源信息感知、大模型智能提炼、多渠道分发与原生桌面工作台**
 
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
@@ -19,14 +19,14 @@
 
 ## 💡 为什么需要 AgentFeed？
 
-在构建自主智能体（AI Agents，如 Claude Code、OpenAI Operator、Antigravity、AutoGPT、Cursor 等）时，开发者与投研人员面临的核心痛点是：**缺乏开箱即用、免登录、抗反爬、结构化的外部世界实时信息感知层（Perception Layer）**。
+在构建自主智能体（AI Agents）或作为知识工作者（开发者、产品经理、创作者、学者、设计师、运营与终身学习者）时，大家面临的核心痛点是：**缺乏开箱即用、免登录、抗反爬、多维结构化的高质量全源信息感知层（Perception Layer）**。
 
-传统爬虫方案脆弱且极易被封禁，而直接调用公有搜索 API 成本高昂且缺乏垂直深度。**AgentFeed** 提供了全链路的一体化开箱即用方案：
+传统爬虫方案脆弱且极易被封禁，而手动刷各平台耗费海量精力。**AgentFeed** 提供了全链路的一体化开箱即用方案：
 
 1. **🖥️ 独立原生桌面应用 (Native Desktop App)**：双击即可启动独立桌面窗口，支持 Mac 菜单栏/Windows 托盘、系统原生通知提醒，同时在后台自动开放 `127.0.0.1:9830` REST API 供下游 Agent 随时消费。
-2. **🌐 全源免登录感知矩阵 (11 大渠道)**：原生 XML/RSS 直链、全网新闻媒体、𝕏 行业博主、Telegram 突发频道、Discord 社区、Substack 深度研报、微信公众号、Y Combinator Hacker News、Reddit 极客社区、ArXiv & HuggingFace AI 顶会论文、SEC EDGAR 官方申报与全球宏观利率。
-3. **🧠 大模型智能梳理流水线 (LLM Curation)**：跨源语义去重、多维聚类分类、核心事实与宏观推演摘要、行业实体与行情标的提取。
-4. **🚀 多渠道分发中心 (Distribution Hub)**：原生支持飞书云文档（自动排版）、飞书群机器人（交互卡片）、Obsidian（自动探测本地 Vault + 双链笔记归档）、SMTP 邮件与全球 CDN RSS / Web 晚报（Cloudflare R2 / 本地静态）。
+2. **🌐 全源免登录感知矩阵 (11 大渠道)**：原生 XML/RSS 直链、全网新闻媒体、𝕏 行业博主、Telegram 突发频道、Discord 社区、Substack 深度专栏、微信公众号、Y Combinator Hacker News、Reddit 垂直社区、ArXiv & HuggingFace AI 论文、重点标的与宏观数据。
+3. **🧠 大模型智能梳理流水线 (LLM Curation)**：跨源语义去重、个性化职业偏好定制（`custom_focus`）、多维聚类分类、核心事实与深度洞察提炼、标签与双链构建。
+4. **🚀 多渠道分发中心 (Distribution Hub)**：原生支持飞书云文档（自动排版）、飞书群机器人（交互卡片）、Obsidian（自动探测本地 Vault + 双链笔记归档）、SMTP 邮件与全球 CDN RSS / Web 简报（Cloudflare R2 / 本地静态）。
 5. **🔌 零配置与优雅降级**：未配置外置大模型 Key 时，全自动调度电脑内置 Agent CLI（Antigravity / Codex / Claude）或本地规则引擎；未配置云存储时自动输出本地静态文件。
 
 ---
@@ -43,22 +43,22 @@ flowchart TD
     subgraph S1 [🌐 1. 全源感知采集矩阵 (Perception Layer)]
         A1[📡 1. 原生 XML / RSS / RSSHub]
         A2[🌐 2. 全网媒体网站 (跳付费墙/反反爬)]
-        A3[𝕏 3. 博主大V (X/Twitter)]
+        A3[𝕏 3. 行业博主大V (X/Twitter)]
         A4[✈️ 4. Telegram 开放预览通道]
         A5[🎮 5. Discord 官方社区]
-        A6[📑 6. Substack 顶级投研专栏]
-        A7[💬 7. 微信公众号买方长文]
+        A6[📑 6. Substack 深度前沿专栏]
+        A7[💬 7. 微信公众号深度特稿]
         A8[🔶 8. Hacker News 热门讨论]
-        A9[🤖 9. Reddit 垂直极客社区]
+        A9[👾 9. Reddit 垂直极客社区]
         A10[📚 10. ArXiv & HuggingFace Papers]
-        A11[🏛️ 11. SEC EDGAR 申报与宏观利率]
+        A11[📊 11. 重点标的与数据指标 (可选)]
     end
 
     subgraph S2 [🧠 2. 大模型智能梳理引擎 (LLM Curation)]
         B1[多源聚类与跨通道语义去重]
-        B2[核心事实与买方级推演摘要]
-        B3[实体提取、标的行情关联与双链构建]
-        B4[OpenAI / Gemini / Claude / 本地 Agent 引擎]
+        B2[个性化职业画像与关注偏好 (Custom Focus)]
+        B3[核心事实与深度洞察摘要]
+        B4[实体提取、标签关联与双链构建]
     end
 
     subgraph S3 [🚀 3. 多渠道分发中心 (Distribution Hub)]
@@ -66,7 +66,7 @@ flowchart TD
         C2[💬 飞书群自定义机器人 (富文本交互卡片)]
         C3[💎 Obsidian 知识库 (Frontmatter + 双链笔记)]
         C4[📧 电子邮箱 (SMTP 每日简报)]
-        C5[☁️ 在线晚报 & RSS 全球 CDN (Cloudflare R2 / 本地静态发布)]
+        C5[☁️ 在线简报 & RSS 全球 CDN (Cloudflare R2 / 本地静态发布)]
     end
 
     APP --> S1 --> S2 --> S3
@@ -84,15 +84,15 @@ flowchart TD
   - OpenAI 兼容协议（DeepSeek / SiliconFlow / Qwen / Moonshot / OpenRouter）
   - Google Gemini 原生 API（Gemini 2.5 Pro / Flash）
   - Anthropic Claude 原生 API（Claude 3.7 / 3.5 Sonnet）
-  - 💻 电脑内置 Agent 降级（自动调度本地 Antigravity / Codex CLI 与高性能投研规则引擎，零配置零成本）
+  - 💻 电脑内置 Agent 降级（自动调度本地 Antigravity / Codex CLI 与高性能规则引擎，零配置零成本）
 - **📄 飞书双模式分发**：
-  - **飞书云文档**：自动调用 Docx OpenAPI 在云空间生成排版完善的日报，包含 Callout 引用框、行情指标与标的跳转。
-  - **飞书群机器人**：推送带涨跌红绿条、分类折叠与直达云文档的富文本卡片。
-- **🔍 Obsidian 本地 Vault 智能探测**：一键探测本机所有 Obsidian 知识库，自动写入符合买方投研规范的 Markdown 双链笔记。
+  - **飞书云文档**：自动调用 Docx OpenAPI 在云空间生成排版完善的日报，包含 Callout 引用框、重点数据与内容跳转。
+  - **飞书群机器人**：推送带重点分类、折叠与直达全源看板的富文本卡片。
+- **🔍 Obsidian 本地 Vault 智能探测**：一键探测本机所有 Obsidian 知识库，自动写入符合知识管理标准的 Markdown 双链笔记。
 - **☁️ 双模静态发布 (Cloudflare R2 / Local Static)**：
-  - 支持配置自己的 Cloudflare R2 / S3 兼容存储桶与自定义域名，全自动生成全球 CDN 加速的沉浸式晚报网页与标准 RSS 源。
+  - 支持配置自己的 Cloudflare R2 / S3 兼容存储桶与自定义域名，全自动生成全球 CDN 加速的沉浸式简报网页与标准 RSS 源。
   - 无需云存储时，自动降级在本地 `./dist/` 生成静态 HTML 与 XML 文件。
-- **🎛️ 现代极简 Web 控制台**：单页可视化管理 11 大板块、单源即时测速、实时测试各分发渠道。
+- **🎛️ 现代极简 Web 控制台**：单页可视化管理 11 大板块、一键行业场景预设切换、单源即时测速、实时测试各分发渠道。
 
 ---
 

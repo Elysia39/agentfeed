@@ -279,15 +279,15 @@ async def api_test_feishu(request: Request):
 async def api_test_feishu_doc(request: Request):
     data = await request.json()
     sample_data = {
-        "lead_summary": "【测试】这是一篇由 Antigravity 自动化投研内参系统生成的飞书云文档测试。",
+        "lead_summary": "【测试】这是一篇由 AgentFeed 自动化智能简报系统生成的飞书云文档连通性测试。",
         "macro_indicators": [
-            {"name": "美债 10Y", "value": "4.25%", "change": "+0.02%"},
-            {"name": "美元指数 DXY", "value": "103.8", "change": "-0.15%"}
+            {"name": "重点指数", "value": "100.0", "change": "+0.5%"},
+            {"name": "核心指标", "value": "4.25", "change": "-0.1%"}
         ],
-        "sec_filings": [{"ticker": "NVDA", "form": "8-K", "description": "重大战略合作协议", "date": "2026-08-25", "url": "https://sec.gov"}],
+        "sec_filings": [],
         "categories": {
-            "AI算力与前沿科技": [
-                {"title": "英伟达与台积电深化先进封装产能", "facts": "满足新一代 Blackwell 架构需求", "impact": "利好半导体产业链", "tickers": ["NVDA", "TSM"], "link": "https://feed.example.com/"}
+            "🤖 AI 与前沿科技": [
+                {"title": "AgentFeed 全源信息感知与智能简报测试", "facts": "跨渠道免登录采集与大模型提炼成功", "impact": "打通飞书云文档多维分发通道", "tags": ["AI", "Agent", "飞书"], "link": "https://feed.your-domain.com/"}
             ]
         }
     }
@@ -299,8 +299,8 @@ async def api_test_email(request: Request):
     data = await request.json()
     sample_html = """
     <div style="font-family:sans-serif; max-width:600px; margin:0 auto; padding:20px; border:1px solid #e5e7eb; border-radius:10px;">
-      <h2 style="color:#1e3a8a;">📰 每日全球宏观与市场晚报内参（测试邮件）</h2>
-      <p style="color:#374151;">这是一封来自 Antigravity 自动化投研内参系统的 SMTP 连通性测试邮件。</p>
+      <h2 style="color:#1e3a8a;">📰 AgentFeed 每日全源智能简报（测试邮件）</h2>
+      <p style="color:#374151;">这是一封来自 AgentFeed 全源信息感知与智能提炼系统的 SMTP 连通性测试邮件。</p>
       <div style="background:#f0fdf4; border-left:4px solid #16a34a; padding:10px 14px; border-radius:6px; color:#166534; font-weight:bold;">
         ✅ SMTP 邮件分发服务配置成功！
       </div>

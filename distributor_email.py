@@ -53,10 +53,10 @@ def send_email_brief(rendered_html, custom_cfg=None):
         return {"success": False, "error": "有效收件人列表为空"}
 
     today_str = datetime.date.today().strftime("%Y-%m-%d")
-    subject = f"📰 每日全球宏观与市场晚报内参 - {today_str}"
+    subject = f"📰 AgentFeed 每日全源智能简报 - {today_str}"
 
     msg = MIMEMultipart('alternative')
-    msg['From'] = Header(f"Antigravity 投研晚报 <{sender}>", 'utf-8')
+    msg['From'] = Header(f"AgentFeed 每日简报 <{sender}>", 'utf-8')
     msg['To'] = Header(", ".join(recipients), 'utf-8')
     msg['Subject'] = Header(subject, 'utf-8')
 

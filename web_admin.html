@@ -33,7 +33,7 @@
             <span class="text-[10px] bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">Agent-Ready</span>
             <span class="text-[10px] bg-slate-100 text-slate-600 border border-slate-200 px-1.5 py-0.5 rounded-full font-mono">v1.0 OpenSource</span>
           </div>
-          <p class="text-xs text-slate-500 font-medium mt-0.5">专为 AI Agent 打造的全源信息感知、大模型智能梳理与多渠道分发框架</p>
+          <p class="text-xs text-slate-500 font-medium mt-0.5">全行业、全职业通用的 AI 全源信息感知、大模型智能提炼与跨端同步平台</p>
         </div>
       </div>
       
@@ -115,8 +115,39 @@
       <div class="flex items-center justify-between">
         <h2 class="text-sm font-bold text-slate-900 flex items-center space-x-2">
           <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
-          <span>全源数据感知与采集矩阵</span>
+          <span>全源数据感知与采集矩阵 (11 大免登录渠道)</span>
         </h2>
+      </div>
+
+      <!-- Quick Universal Profession Presets Bar -->
+      <div class="bg-gradient-to-r from-blue-50/80 via-indigo-50/80 to-purple-50/80 border border-blue-100 rounded-2xl p-3 shadow-2xs flex flex-wrap items-center justify-between gap-2.5">
+        <div class="flex items-center space-x-2">
+          <div class="w-6 h-6 rounded-lg bg-blue-600 text-white flex items-center justify-center text-xs shadow-xs">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+          </div>
+          <div>
+            <span class="text-xs font-bold text-slate-800">各行业通用模板预设：</span>
+            <span class="text-[11px] text-slate-500 hidden md:inline">一键切换适配您身份画像的订阅源组合与提炼重点</span>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-1.5 text-xs">
+          <button type="button" onclick="applyProfessionPreset('tech_dev')" class="px-2.5 py-1 bg-white hover:bg-blue-600 hover:text-white text-slate-700 font-medium rounded-lg border border-slate-200 shadow-2xs transition flex items-center space-x-1 cursor-pointer">
+            <span>🚀 科技与开发者</span>
+          </button>
+          <button type="button" onclick="applyProfessionPreset('product_design')" class="px-2.5 py-1 bg-white hover:bg-blue-600 hover:text-white text-slate-700 font-medium rounded-lg border border-slate-200 shadow-2xs transition flex items-center space-x-1 cursor-pointer">
+            <span>🎨 产品与设计</span>
+          </button>
+          <button type="button" onclick="applyProfessionPreset('business_startup')" class="px-2.5 py-1 bg-white hover:bg-blue-600 hover:text-white text-slate-700 font-medium rounded-lg border border-slate-200 shadow-2xs transition flex items-center space-x-1 cursor-pointer">
+            <span>💼 商业与创投</span>
+          </button>
+          <button type="button" onclick="applyProfessionPreset('academic_research')" class="px-2.5 py-1 bg-white hover:bg-blue-600 hover:text-white text-slate-700 font-medium rounded-lg border border-slate-200 shadow-2xs transition flex items-center space-x-1 cursor-pointer">
+            <span>🔬 学术与前沿科研</span>
+          </button>
+          <button type="button" onclick="applyProfessionPreset('global_general')" class="px-2.5 py-1 bg-white hover:bg-blue-600 hover:text-white text-slate-700 font-medium rounded-lg border border-slate-200 shadow-2xs transition flex items-center space-x-1 cursor-pointer">
+            <span>🌍 全球热点与精选</span>
+          </button>
+        </div>
       </div>
 
       <!-- Navigation Tabs (11 Sources with Exact Brand SVGs) -->
@@ -220,13 +251,13 @@
           <span id="count-arxiv" class="text-[10px] font-mono font-bold bg-slate-200/80 text-slate-700 px-1.5 py-0.5 rounded-full">0</span>
         </button>
 
-        <!-- 11. SEC & Macro (Moved to the end) -->
+        <!-- 11. Custom Tickers & Data Indicators (Optional) -->
         <button onclick="switchTab('sec')" id="tab-btn-sec" class="tab-btn py-2.5 px-3 text-xs sm:text-sm flex items-center space-x-2 text-slate-500 hover:text-slate-900 whitespace-nowrap rounded-t-xl transition hover:bg-slate-100/70">
           <svg class="w-4 h-4 text-amber-600 shrink-0" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 2L1 7.5V9h22V7.5L12 2zm-8 8.5v8h3v-8H4zm6 0v8h4v-8h-4zm7 0v8h3v-8h-3zM2 20v2h20v-2H2z"/>
           </svg>
-          <span class="font-medium">11. SEC 披露 & 宏观</span>
-          <span class="text-[9px] font-mono font-bold bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded-full">EDGAR</span>
+          <span class="font-medium">11. 重点标的与数据指标</span>
+          <span class="text-[9px] font-mono font-bold bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded-full">可选</span>
         </button>
 
       </div>
@@ -348,7 +379,7 @@
       <!-- Section 7: WeChat -->
       <div id="section-wx" class="tab-section hidden">
         <div class="flex items-center justify-between mb-3 bg-slate-50/70 p-2.5 rounded-xl border border-slate-100">
-          <p class="text-xs text-slate-500">精选买方与券商首席核心长文</p>
+          <p class="text-xs text-slate-500">精选行业大V与高价值深度专栏特稿</p>
           <div class="flex items-center space-x-2.5 shrink-0">
             <label class="flex items-center space-x-1.5 cursor-pointer bg-white px-2.5 py-1 rounded-lg border border-slate-200 text-xs font-medium text-slate-700 shadow-2xs transition hover:border-slate-300">
               <span>板块总开关</span>
@@ -557,6 +588,44 @@
               <input type="password" id="llm-api-key" class="w-full text-xs font-mono border border-slate-200 rounded-lg px-3 py-2 focus:ring-1 focus:ring-indigo-500 focus:outline-none" placeholder="sk-... (若使用电脑本地 Agent 则留空)">
             </div>
           </div>
+
+          <!-- Custom Domain Focus / Persona Preferences -->
+          <div class="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-xl space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="block text-xs font-bold text-slate-800 flex items-center space-x-1.5">
+                <i data-lucide="target" class="w-3.5 h-3.5 text-indigo-600"></i>
+                <span>🎯 个性化关注偏好与重点领域 (适用于各行各业)</span>
+              </label>
+              <span class="text-[10px] text-slate-400">大模型将据此为您个性化提炼事实与洞察</span>
+            </div>
+            
+            <!-- Quick Domain Chips (Click to append or set) -->
+            <div class="flex flex-wrap gap-1.5 text-[10px]">
+              <button type="button" onclick="addFocusTopic('🤖 AI与前沿科技')" class="px-2 py-0.5 bg-white hover:bg-indigo-100 text-slate-700 rounded-md border border-indigo-200/80 transition cursor-pointer">
+                + 🤖 AI与前沿科技
+              </button>
+              <button type="button" onclick="addFocusTopic('💻 编程与开源工程')" class="px-2 py-0.5 bg-white hover:bg-indigo-100 text-slate-700 rounded-md border border-indigo-200/80 transition cursor-pointer">
+                + 💻 编程与开源工程
+              </button>
+              <button type="button" onclick="addFocusTopic('🎨 产品设计与交互')" class="px-2 py-0.5 bg-white hover:bg-indigo-100 text-slate-700 rounded-md border border-indigo-200/80 transition cursor-pointer">
+                + 🎨 产品设计与交互
+              </button>
+              <button type="button" onclick="addFocusTopic('📈 商业模式与创投')" class="px-2 py-0.5 bg-white hover:bg-indigo-100 text-slate-700 rounded-md border border-indigo-200/80 transition cursor-pointer">
+                + 📈 商业模式与创投
+              </button>
+              <button type="button" onclick="addFocusTopic('🔬 学术论文与前沿科研')" class="px-2 py-0.5 bg-white hover:bg-indigo-100 text-slate-700 rounded-md border border-indigo-200/80 transition cursor-pointer">
+                + 🔬 学术论文与前沿科研
+              </button>
+              <button type="button" onclick="addFocusTopic('🌍 全球热点与深度思考')" class="px-2 py-0.5 bg-white hover:bg-indigo-100 text-slate-700 rounded-md border border-indigo-200/80 transition cursor-pointer">
+                + 🌍 全球热点与深度思考
+              </button>
+              <button type="button" onclick="addFocusTopic('🌱 个人成长与效率工具')" class="px-2 py-0.5 bg-white hover:bg-indigo-100 text-slate-700 rounded-md border border-indigo-200/80 transition cursor-pointer">
+                + 🌱 个人成长与效率工具
+              </button>
+            </div>
+
+            <input type="text" id="llm-custom-focus" class="w-full text-xs border border-indigo-200 bg-white rounded-lg px-3 py-2 focus:ring-1 focus:ring-indigo-500 focus:outline-none" placeholder="输入您关注的重点方向，如：前沿科技、AI工具、产品设计、商业观察、全球热点">
+          </div>
         </div>
       </div>
 
@@ -650,18 +719,19 @@
                   </button>
                 </div>
                 <select id="dist-obsidian-vault" class="w-full text-xs border border-slate-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-purple-500">
-                  <option value="Investing">Investing (投资库)</option>
-                  <option value="Trading">Trading (交易库)</option>
-                  <option value="LIfe">LIfe</option>
+                  <option value="AgentFeed">AgentFeed</option>
+                  <option value="Daily Notes">Daily Notes</option>
+                  <option value="Knowledge">Knowledge</option>
+                  <option value="Work">Work</option>
                 </select>
               </div>
 
               <div>
                 <label class="block text-[11px] font-semibold text-slate-600 mb-1">保存目录 (Folder)</label>
-                <input type="text" id="dist-obsidian-folder" value="Daily Intel" class="w-full text-xs font-mono border border-slate-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-purple-500" placeholder="Daily Intel">
+                <input type="text" id="dist-obsidian-folder" value="Daily Brief" class="w-full text-xs font-mono border border-slate-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-purple-500" placeholder="Daily Brief">
               </div>
 
-              <p class="text-[10px] text-slate-400">调用本地 Obsidian CLI 自动写入带 Frontmatter 标签和 [[标的双链]] 的 Markdown 笔记。</p>
+              <p class="text-[10px] text-slate-400">调用本地 Obsidian CLI 自动写入带 Frontmatter 标签和 [[双链]] 的精美结构化笔记。</p>
             </div>
 
             <button onclick="testObsidianWrite()" class="w-full text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 py-1.5 rounded-lg font-medium flex items-center justify-center space-x-1 transition">
@@ -842,17 +912,17 @@
                     <button type="button" onclick="toggleScheduleTime('12:00')" id="slot-1200" class="slot-pill p-1.5 text-center text-xs rounded-xl border border-slate-200 hover:border-blue-300 bg-white transition flex flex-col items-center cursor-pointer">
                       <span class="text-sm">☀️</span>
                       <span class="font-mono font-bold text-[11px] text-slate-800">12:00</span>
-                      <span class="text-[9px] text-slate-400">午盘</span>
+                      <span class="text-[9px] text-slate-400">午间</span>
                     </button>
                     <button type="button" onclick="toggleScheduleTime('16:30')" id="slot-1630" class="slot-pill p-1.5 text-center text-xs rounded-xl border border-slate-200 hover:border-blue-300 bg-white transition flex flex-col items-center cursor-pointer">
                       <span class="text-sm">☕</span>
                       <span class="font-mono font-bold text-[11px] text-slate-800">16:30</span>
-                      <span class="text-[9px] text-slate-400">盘后</span>
+                      <span class="text-[9px] text-slate-400">下午</span>
                     </button>
                     <button type="button" onclick="toggleScheduleTime('20:30')" id="slot-2030" class="slot-pill p-1.5 text-center text-xs rounded-xl border border-slate-200 hover:border-blue-300 bg-white transition flex flex-col items-center cursor-pointer">
                       <span class="text-sm">🌇</span>
                       <span class="font-mono font-bold text-[11px] text-slate-800">20:30</span>
-                      <span class="text-[9px] text-slate-400">晚报</span>
+                      <span class="text-[9px] text-slate-400">晚间</span>
                     </button>
                     <button type="button" onclick="toggleScheduleTime('23:00')" id="slot-2300" class="slot-pill p-1.5 text-center text-xs rounded-xl border border-slate-200 hover:border-blue-300 bg-white transition flex flex-col items-center cursor-pointer">
                       <span class="text-sm">🌙</span>
@@ -866,13 +936,13 @@
                 <div class="flex items-center space-x-1.5 overflow-x-auto pb-0.5 text-[10px]">
                   <span class="text-slate-400 shrink-0">快捷组合:</span>
                   <button type="button" onclick="applyPresetTimes(['08:30', '12:00', '20:30'])" class="bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 px-2 py-1 rounded-md font-medium whitespace-nowrap transition cursor-pointer">
-                    🍱 投研三餐 (08:30/12:00/20:30)
+                    🍱 晨午晚三报 (08:30/12:00/20:30)
                   </button>
                   <button type="button" onclick="applyPresetTimes(['09:00', '18:00'])" class="bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 px-2 py-1 rounded-md font-medium whitespace-nowrap transition cursor-pointer">
                     💼 工作日双报 (09:00/18:00)
                   </button>
                   <button type="button" onclick="applyPresetTimes(['20:30'])" class="bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 px-2 py-1 rounded-md font-medium whitespace-nowrap transition cursor-pointer">
-                    🌇 经典晚报 (20:30)
+                    🌇 晚间单次 (20:30)
                   </button>
                 </div>
 
@@ -1332,6 +1402,8 @@
         document.getElementById('llm-model').value = llm.model || 'deepseek-chat';
         document.getElementById('llm-base-url').value = llm.base_url || 'https://api.deepseek.com/v1';
         document.getElementById('llm-api-key').value = llm.api_key || '';
+        const focusInput = document.getElementById('llm-custom-focus');
+        if (focusInput) focusInput.value = llm.custom_focus || '科技前沿、AI与开源工具、产品设计、商业观察、工程技术与全球热点';
 
         // Distribution Settings
         const dist = state.distribution_settings || {};
@@ -1347,8 +1419,8 @@
 
         const obs = dist.obsidian || {};
         document.getElementById('dist-obsidian-enabled').checked = !!obs.enabled;
-        document.getElementById('dist-obsidian-vault').value = obs.vault || 'Investing';
-        document.getElementById('dist-obsidian-folder').value = obs.folder || 'Daily Intel';
+        document.getElementById('dist-obsidian-vault').value = obs.vault || 'AgentFeed';
+        document.getElementById('dist-obsidian-folder').value = obs.folder || 'Daily Brief';
 
         const em = dist.email || {};
         document.getElementById('dist-email-enabled').checked = !!em.enabled;
@@ -1477,16 +1549,79 @@
       pingNodes();
     }
 
+    function addFocusTopic(topic) {
+      const input = document.getElementById('llm-custom-focus');
+      if (!input) return;
+      const cleanTopic = topic.replace(/^\+\s*/, '').trim();
+      const current = input.value.trim();
+      if (!current) {
+        input.value = cleanTopic;
+      } else if (!current.includes(cleanTopic)) {
+        input.value = `${current}、${cleanTopic}`;
+      }
+      if (!state.llm_settings) state.llm_settings = {};
+      state.llm_settings.custom_focus = input.value;
+      saveData();
+      showToast(`已追加关注方向：${cleanTopic}`);
+    }
+
+    function applyProfessionPreset(type) {
+      if (!state.channel_toggles) state.channel_toggles = {};
+      if (!state.llm_settings) state.llm_settings = {};
+      const focusInput = document.getElementById('llm-custom-focus');
+
+      if (type === 'tech_dev') {
+        const focus = "前沿科技、开源架构、AI与大模型、开发工具、系统工程、技术深度思考";
+        if (focusInput) focusInput.value = focus;
+        state.llm_settings.custom_focus = focus;
+        state.channel_toggles = { rss: true, web: true, blog: true, tg: false, dc: true, sub: true, wx: true, hn: true, reddit: true, arxiv: true, sec: false };
+        showToast("🎉 已切换为【🚀 科技与开发者】模式 (已激活 HN, Reddit, ArXiv, 技术博客)");
+      } else if (type === 'product_design') {
+        const focus = "创新产品、UI/UX设计、用户增长、交互体验、工具效率、独立开发、出海产品";
+        if (focusInput) focusInput.value = focus;
+        state.llm_settings.custom_focus = focus;
+        state.channel_toggles = { rss: true, web: true, blog: true, tg: false, dc: true, sub: true, wx: true, hn: true, reddit: true, arxiv: false, sec: false };
+        showToast("🎉 已切换为【🎨 产品与设计】模式 (已激活产品专栏、设计工具与社群)");
+      } else if (type === 'business_startup') {
+        const focus = "商业模式、全球企业战略、出海创投、行业深度观察、宏观产业动态";
+        if (focusInput) focusInput.value = focus;
+        state.llm_settings.custom_focus = focus;
+        state.channel_toggles = { rss: true, web: true, blog: true, tg: true, dc: false, sub: true, wx: true, hn: false, reddit: true, arxiv: false, sec: true };
+        showToast("🎉 已切换为【💼 商业与创投】模式 (已激活创投智库、商业深度与产业指标)");
+      } else if (type === 'academic_research') {
+        const focus = "学术前沿、AI与计算机科学、ArXiv预印本、前沿科研论文、算法创新、顶会动态";
+        if (focusInput) focusInput.value = focus;
+        state.llm_settings.custom_focus = focus;
+        state.channel_toggles = { rss: true, web: true, blog: true, tg: false, dc: true, sub: true, wx: true, hn: true, reddit: true, arxiv: true, sec: false };
+        showToast("🎉 已切换为【🔬 学术与前沿科研】模式 (已激活 Hugging Face 论文、ArXiv 与极客社区)");
+      } else { // global_general
+        const focus = "全球热点大事件、科技生活、前沿趋势、深度特稿、高密度知识精选";
+        if (focusInput) focusInput.value = focus;
+        state.llm_settings.custom_focus = focus;
+        state.channel_toggles = { rss: true, web: true, blog: true, tg: true, dc: true, sub: true, wx: true, hn: true, reddit: true, arxiv: true, sec: false };
+        showToast("🎉 已切换为【🌍 全球热点与精选】全能模式");
+      }
+
+      // Sync checkboxes
+      for (const [ch, enabled] of Object.entries(state.channel_toggles)) {
+        const chk = document.getElementById(`toggle-channel-${ch}`);
+        if (chk) chk.checked = enabled;
+      }
+      renderAll();
+      saveData();
+    }
+
     async function saveLLMConfig() {
       state.llm_settings = {
         enabled: document.getElementById('llm-enabled').checked,
         provider: document.getElementById('llm-provider').value,
         model: document.getElementById('llm-model').value.trim(),
         base_url: document.getElementById('llm-base-url').value.trim(),
-        api_key: document.getElementById('llm-api-key').value.trim()
+        api_key: document.getElementById('llm-api-key').value.trim(),
+        custom_focus: (document.getElementById('llm-custom-focus')?.value || '').trim()
       };
       await saveData();
-      alert("✅ AgentFeed 大模型智能梳理配置已成功保存！");
+      showToast("✅ AgentFeed 大模型智能提炼配置已成功保存！");
     }
 
     async function saveDistConfigAll() {
@@ -1789,7 +1924,7 @@
       const content = document.getElementById('test-modal-content');
       document.getElementById('test-modal-title').innerText = "AgentFeed 智能梳理实时测试";
       modal.classList.remove('hidden');
-      content.innerHTML = `<div class="flex items-center space-x-2 text-slate-500"><i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>正在调用大模型进行多源去重、分类与买方级摘要...</span></div>`;
+      content.innerHTML = `<div class="flex items-center space-x-2 text-slate-500"><i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>正在调用大模型进行全源智能去重、分类与深度提炼...</span></div>`;
       lucide.createIcons();
 
       try {
@@ -2466,7 +2601,7 @@
               <span class="font-bold text-sm text-slate-900 truncate" title="${item.name}">${item.name}</span>
               <span class="text-[10px] bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded font-medium border border-emerald-200 shrink-0">微信公众号</span>
             </div>
-            <div class="text-xs font-mono text-slate-500 truncate" title="${item.route || ''}">${item.route || '精选买方与券商首席核心长文'}</div>
+            <div class="text-xs font-mono text-slate-500 truncate" title="${item.route || ''}">${item.route || '精选深度长文与行业特稿'}</div>
           </div>
           <div class="flex items-center space-x-1 shrink-0">
             <button onclick="toggleItem('wechat_accounts', '${item.id}')" class="p-1.5 rounded-lg ${item.enabled ? 'text-emerald-600 hover:bg-emerald-50' : 'text-slate-400 hover:bg-slate-100'}">

@@ -82,10 +82,10 @@ def generate_daily_brief():
     # 3. Substack Newsletters
     sub_articles = []
     if toggles.get("sub", True):
-        print("📚 3. 拉取 Substack 顶级独立投研专栏...")
+        print("📑 3. 拉取 Substack 深度专栏与前沿观察...")
         sub_articles = fetch_all_substack_newsletters(sources.get("substack_newsletters", []))
     else:
-        print("⏸️ [已跳过] 6. Substack 研报板块已关闭")
+        print("⏸️ [已跳过] 6. Substack 专栏板块已关闭")
 
     # 4. Telegram Channels
     tg_messages = []
@@ -108,7 +108,7 @@ def generate_daily_brief():
     # 6. WeChat Articles
     wx_articles = []
     if toggles.get("wx", True):
-        print("💬 6. 拉取微信公众号买方长文与纪要...")
+        print("💬 6. 拉取微信公众号深度特稿与行业长文...")
         wx_accounts = sources.get("wechat_accounts", [])
         wx_articles = fetch_all_wechat_articles([w for w in wx_accounts if w.get("enabled", True)])
     else:

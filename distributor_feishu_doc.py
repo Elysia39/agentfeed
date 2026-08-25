@@ -56,7 +56,7 @@ def create_feishu_doc(curated_brief: dict, custom_cfg: dict = None) -> dict:
         return {"success": False, "error": "未配置飞书自建应用的 App ID 或 App Secret"}
 
     today_str = datetime.date.today().strftime("%Y-%m-%d")
-    title = f"📰 全球宏观与市场晚报内参 · {today_str}"
+    title = f"📰 AgentFeed 每日全源智能简报 · {today_str}"
 
     try:
         token = get_tenant_access_token(app_id, app_secret)

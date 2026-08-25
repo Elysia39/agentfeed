@@ -23,7 +23,8 @@
     "api_key": "",
     "base_url": "https://api.deepseek.com/v1",
     "model": "deepseek-chat",
-    "temperature": 0.3
+    "temperature": 0.3,
+    "custom_focus": "科技前沿、AI与开源工具、产品设计、商业观察、工程技术与全球热点"
   },
   "distribution_settings": {
     "feishu": {
@@ -38,8 +39,8 @@
     },
     "obsidian": {
       "enabled": true,
-      "vault": "Investing",
-      "folder": "Daily Intel"
+      "vault": "AgentFeed",
+      "folder": "Daily Brief"
     },
     "email": {
       "enabled": false,
@@ -395,7 +396,7 @@
     },
     {
       "id": "sub-3",
-      "name": "Doomberg (能源与大宗商品买方视角)",
+      "name": "Doomberg (能源与大宗商品前沿观察)",
       "handle": "doomberg",
       "enabled": true
     },
@@ -504,7 +505,7 @@
     },
     {
       "id": "reddit-stocks",
-      "name": "r/stocks (美股基本面与财报季买方观点)",
+      "name": "r/stocks (美股市场与行业趋势讨论)",
       "subreddit": "stocks",
       "limit": 4,
       "enabled": true

@@ -35,7 +35,7 @@ def build_feishu_card(curated_data):
         "elements": [
             {
                 "tag": "plain_text",
-                "content": f"📅 发布时间: {today_str} {now_str} | 投研内参自动提炼"
+                "content": f"📅 发布时间: {today_str} {now_str} | AgentFeed 智能提炼"
             }
         ]
     })
@@ -52,7 +52,7 @@ def build_feishu_card(curated_data):
 
     # Macro summary line
     if macro:
-        macro_text = "📊 **大盘与宏观利率：**\n"
+        macro_text = "📊 **重点数据与指标追踪：**\n"
         for m in macro[:6]:
             macro_text += f"• {m.get('name')}: **{m.get('value')}** ({m.get('change')})\n"
         elements.append({
@@ -64,33 +64,25 @@ def build_feishu_card(curated_data):
         })
         elements.append({"tag": "hr"})
 
-    # SEC Filings
-    if sec_filings:
-        sec_text = "🏛️ **SEC 重点申报：**\n"
-        for s in sec_filings[:4]:
-            sec_text += f"• **[{s.get('ticker')}]** Form {s.get('form')}: {s.get('description')[:50]}...\n"
-        elements.append({
-            "tag": "div",
-            "text": {
-                "tag": "lark_md",
-                "content": sec_text
-            }
-        })
-        elements.append({"tag": "hr"})
-
-    # Top news items
-    news_count = 0
+    # Categories
     for cat_name, items in categories.items():
         if not items:
             continue
-        cat_text = f"📰 **{cat_name}**\n"
+        cat_text = f"🔥 **{cat_name}**\n"
         for itm in items[:3]:
-            news_count += 1
-            title = itm.get("title", "")
-            facts = itm.get("facts", itm.get("summary", ""))[:70]
-            link = itm.get("link", "")
-            cat_text += f"• **{title}**\n  {facts} [🔗 查看]({link})\n"
-        
+            title = itm.get('title', '')
+            facts = itm.get('facts', itm.get('summary', ''))
+            impact = itm.get('impact', '')
+            link = itm.get('link', '')
+            tags = itm.get('tags', itm.get('tickers', []))
+            
+            cat_text += f"• **[{title}]({link})**\n"
+            if facts:
+                cat_text += f"  - 核心事实: {facts}\n"
+            if impact:
+                cat_text += f"  - 关键洞察: {impact}\n"
+            if tags:
+                cat_text += f"  - 标签: `{' '.join(tags)}`\n"
         elements.append({
             "tag": "div",
             "text": {
@@ -98,13 +90,10 @@ def build_feishu_card(curated_data):
                 "content": cat_text
             }
         })
-        if news_count >= 8:
-            break
+        elements.append({"tag": "hr"})
 
-    from config import R2_CONFIG
-    public_url = R2_CONFIG.get("public_domain", "https://feed.your-domain.com")
-
-    # Action button to web
+    # Public web button
+    public_url = "https://feed.your-domain.com"
     elements.append({
         "tag": "action",
         "actions": [
@@ -112,7 +101,7 @@ def build_feishu_card(curated_data):
                 "tag": "button",
                 "text": {
                     "tag": "plain_text",
-                    "content": "📖 在线阅读完整杂志晚报 ↗"
+                    "content": "📖 在线阅读完整全源简报看板 ↗"
                 },
                 "type": "primary",
                 "url": public_url
@@ -126,7 +115,7 @@ def build_feishu_card(curated_data):
             "header": {
                 "title": {
                     "tag": "plain_text",
-                    "content": f"📰 【每日晚报内参】{today_str} 全球宏观与核心投研"
+                    "content": f"📰 【AgentFeed 每日简报】{today_str} 全源热点与核心洞察"
                 },
                 "template": "blue"
             },
