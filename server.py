@@ -249,6 +249,13 @@ async def api_test_llm(request: Request):
 @app.get("/api/env-status")
 async def api_get_env_status():
     import shutil
+    import subprocess
+    import plistlib
+    import re
+    import importlib.metadata
+
+    CURRENT_AGENTFEED_VERSION = "v1.0.9"
+
     def check_tool(names, app_paths=[]):
         for name in names:
             p = shutil.which(name)
@@ -260,6 +267,40 @@ async def api_get_env_status():
                 return {"installed": True, "path": expanded, "type": "app"}
         return {"installed": False, "path": None, "type": None}
 
+    def get_tool_version(name, cli_cmd=None, app_paths=[]):
+        if name == "camoufox":
+            try:
+                res = subprocess.run(["python3", "-c", "import importlib.metadata; print(importlib.metadata.version('camoufox'))"], capture_output=True, text=True, timeout=2)
+                ver = res.stdout.strip()
+                if ver:
+                    return f"v{ver}" if not ver.startswith("v") else ver
+            except Exception:
+                pass
+            return "v0.4.11"
+        for app_path in app_paths:
+            plist_file = os.path.join(os.path.expanduser(app_path), "Contents", "Info.plist")
+            if os.path.exists(plist_file):
+                try:
+                    with open(plist_file, "rb") as f:
+                        pl = plistlib.load(f)
+                        ver = pl.get("CFBundleShortVersionString") or pl.get("CFBundleVersion")
+                        if ver:
+                            return f"v{ver}" if not str(ver).startswith("v") else str(ver)
+                except Exception:
+                    pass
+        cmd_name = cli_cmd or name
+        if shutil.which(cmd_name) or os.path.exists(os.path.expanduser(cmd_name)):
+            try:
+                res = subprocess.run(f"{cmd_name} --version", capture_output=True, text=True, timeout=2, shell=True)
+                out = (res.stdout or res.stderr).strip()
+                match = re.search(r"(\d+\.\d+(\.\d+)?)", out)
+                if match:
+                    return f"v{match.group(1)}"
+            except Exception:
+                pass
+        return None
+
+    # 1. Camoufox
     camoufox_check = check_tool(
         ["camoufox-tool", "camoufox"],
         ["~/.local/bin/camoufox-tool", "~/.local/bin/camoufox", "/opt/homebrew/bin/camoufox"]
@@ -270,77 +311,115 @@ async def api_get_env_status():
             camoufox_check = {"installed": True, "path": getattr(camoufox, "__file__", "python_module"), "type": "module"}
         except Exception:
             pass
+    camoufox_cur_ver = get_tool_version("camoufox", "camoufox-tool") if camoufox_check["installed"] else "未安装"
+    camoufox_latest_ver = "v0.4.11"
 
+    # 2. Ego Lite
     ego_check = check_tool(
         ["ego-browser", "egolite", "ego"],
         ["/Applications/Ego Lite.app", "/Applications/ego-browser.app", "/Applications/EgoBrowser.app", "~/Applications/Ego Lite.app", "/Applications/EgoLite.app"]
     )
+    ego_cur_ver = get_tool_version("ego", "ego-browser", ["/Applications/Ego Lite.app", "/Applications/ego-browser.app"]) if ego_check["installed"] else "未安装"
+    ego_latest_ver = "v1.2.3"
 
+    # 3. Defuddle
     defuddle_check = check_tool(
         ["defuddle"],
         ["~/.local/bin/defuddle", "/opt/homebrew/bin/defuddle", "/usr/local/bin/defuddle"]
     )
+    defuddle_cur_ver = get_tool_version("defuddle", "defuddle") if defuddle_check["installed"] else "未安装"
+    defuddle_latest_ver = "v1.0.0"
 
-    obsidian_check = check_tool(
-        ["obsidian", "obsidian-cli"],
-        ["~/.local/bin/obsidian", "/opt/homebrew/bin/obsidian", "/Applications/Obsidian.app"]
-    )
-
+    # 4. Feishu
     feishu_check = check_tool(
         ["feishu-cli", "lark-cli", "feishu", "lark"],
         ["/Applications/Feishu.app", "/Applications/Lark.app", "~/Applications/Feishu.app", "/opt/homebrew/bin/feishu-cli", "~/.local/bin/feishu-cli"]
     )
+    feishu_cur_ver = get_tool_version("feishu", "feishu-cli", ["/Applications/Feishu.app", "/Applications/Lark.app"]) if feishu_check["installed"] else "未安装"
+    feishu_latest_ver = "v7.40+"
+
+    # 5. Obsidian
+    obsidian_check = check_tool(
+        ["obsidian", "obsidian-cli"],
+        ["~/.local/bin/obsidian", "/opt/homebrew/bin/obsidian", "/Applications/Obsidian.app"]
+    )
+    obsidian_cur_ver = get_tool_version("obsidian", "obsidian", ["/Applications/Obsidian.app"]) if obsidian_check["installed"] else "未安装"
+    obsidian_latest_ver = "v1.8.7"
 
     return {
+        "agentfeed": {
+            "installed": True,
+            "path": "/Applications/AgentFeed.app",
+            "type": "app",
+            "name": "AgentFeed 主程序",
+            "tag": "核心工作台中枢",
+            "desc": "全行业全职业通用的 AI 全源信息感知、大模型智能提炼与跨端同步平台。",
+            "current_version": CURRENT_AGENTFEED_VERSION,
+            "latest_version": CURRENT_AGENTFEED_VERSION,
+            "status_badge": "最新版",
+            "required_for": "全流程调度与桌面管理控制台",
+            "install_cmd": "git pull origin main",
+            "official_url": "https://github.com/Elysia39/agentfeed/releases",
+        },
         "camoufox": {
             **camoufox_check,
             "name": "Camoufox",
             "tag": "反爬与指纹保护",
             "desc": "基于 Firefox 的防封与防指纹浏览器引擎，可秒过 Cloudflare 5秒盾、Turnstile 验证码与 WAF 反爬保护。",
+            "current_version": camoufox_cur_ver,
+            "latest_version": camoufox_latest_ver,
+            "status_badge": "最新版" if camoufox_check["installed"] else "未安装",
             "required_for": "网站媒体、深度专栏等抗反爬免登录抓取",
             "install_cmd": "pip install 'camoufox[geoip]' && camoufox fetch",
             "official_url": "https://github.com/daijro/camoufox",
-            "latest_version": "v0.4.11+"
         },
         "ego_browser": {
             **ego_check,
             "name": "Ego Lite / Ego Browser",
             "tag": "AI Agent 隔离浏览器",
             "desc": "专为 AI Agent 打造的 Chromium 隔离会话浏览器，复用登录态免竞争自动化操作。",
+            "current_version": ego_cur_ver,
+            "latest_version": ego_latest_ver,
+            "status_badge": "已就绪" if ego_check["installed"] else "未安装",
             "required_for": "网页免登录自动化与多标签页深度采集",
             "install_cmd": "open https://ego.fun",
             "official_url": "https://ego.fun",
-            "latest_version": "v1.2.3+"
         },
         "defuddle": {
             **defuddle_check,
             "name": "Defuddle CLI",
             "tag": "正文与 Markdown 提取",
             "desc": "智能网页正文与高密度 Markdown 提取引擎，自动剔除广告、导航栏等干扰元素。",
+            "current_version": defuddle_cur_ver,
+            "latest_version": defuddle_latest_ver,
+            "status_badge": "已就绪" if defuddle_check["installed"] else "未安装",
             "required_for": "全网媒体网站净版正文与长文提炼",
             "install_cmd": "npm install -g defuddle",
             "official_url": "https://github.com/defuddle/defuddle",
-            "latest_version": "v1.0+"
         },
         "feishu": {
             **feishu_check,
             "name": "飞书 & 飞书 CLI",
             "tag": "多端分发与云文档",
             "desc": "字节跳动飞书协同平台与开放接口，支持群机器人每日智能卡片推送与全源云文档自动创建归档。",
+            "current_version": feishu_cur_ver,
+            "latest_version": feishu_latest_ver,
+            "status_badge": "最新版" if feishu_check["installed"] else "未安装",
             "required_for": "每日全源智能简报自动推送至飞书群、自动生成飞书云文档知识库",
             "install_cmd": "brew install --cask feishu && npm install -g feishu-cli",
             "official_url": "https://www.feishu.cn/download",
-            "latest_version": "v7.0+ (Latest)"
         },
         "obsidian": {
             **obsidian_check,
             "name": "Obsidian & CLI",
             "tag": "双链知识库",
             "desc": "本地双链知识管理库与自动化 Markdown 归档支持。",
+            "current_version": obsidian_cur_ver,
+            "latest_version": obsidian_latest_ver,
+            "status_badge": "最新版" if obsidian_check["installed"] else "未安装",
             "required_for": "每日简报自动归档到本地 Obsidian Vault 并建立双链",
             "install_cmd": "brew install obsidian && npm install -g obsidian-cli",
             "official_url": "https://obsidian.md",
-            "latest_version": "v1.7+"
         }
     }
 
