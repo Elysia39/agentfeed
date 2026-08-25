@@ -52,6 +52,9 @@ jobs:
             --hidden-import "run_daily_brief" \
             --hidden-import "llm_curator" \
             --hidden-import "distributor_manager" \
+            --hidden-import "scraper_macro" \
+            --hidden-import "yfinance" \
+            --hidden-import "plyer" \
             --add-data "web_admin.html:." \
             --add-data "icon.png:." \
             --add-data "sources.example.json:." \
@@ -77,6 +80,9 @@ jobs:
             --hidden-import "run_daily_brief" `
             --hidden-import "llm_curator" `
             --hidden-import "distributor_manager" `
+            --hidden-import "scraper_macro" `
+            --hidden-import "yfinance" `
+            --hidden-import "plyer" `
             --add-data "web_admin.html;." `
             --add-data "icon.png;." `
             --add-data "sources.example.json;." `
@@ -99,6 +105,9 @@ jobs:
             --hidden-import "run_daily_brief" \
             --hidden-import "llm_curator" \
             --hidden-import "distributor_manager" \
+            --hidden-import "scraper_macro" \
+            --hidden-import "yfinance" \
+            --hidden-import "plyer" \
             --add-data "web_admin.html:." \
             --add-data "icon.png:." \
             --add-data "sources.example.json:." \

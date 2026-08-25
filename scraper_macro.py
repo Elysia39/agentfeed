@@ -1,6 +1,10 @@
 import os
 import json
-import yfinance as yf
+
+try:
+    import yfinance as yf
+except ImportError:
+    yf = None
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 from paths import SOURCES_FILE
@@ -20,6 +24,15 @@ def fetch_single_macro_indicator(item):
     sym = item.get("symbol", "").strip()
     name = item.get("name", sym)
     unit = item.get("unit", "")
+    
+    if yf is None:
+        return {
+            "name": name,
+            "symbol": sym,
+            "price": "--",
+            "change_pct": "0.00%",
+            "status": "up"
+        }
     
     try:
         ticker = yf.Ticker(sym)

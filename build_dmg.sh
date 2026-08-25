@@ -14,6 +14,7 @@ mkdir -p "$TEMP_DMG_DIR"
 
 # Copy .app bundle
 cp -R "$SOURCE_APP" "$TEMP_DMG_DIR/${APP_NAME}.app"
+xattr -cr "$TEMP_DMG_DIR/${APP_NAME}.app" || true
 
 # Create symlink to /Applications for standard drag-and-drop installation
 ln -s /Applications "$TEMP_DMG_DIR/Applications"

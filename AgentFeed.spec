@@ -3,7 +3,7 @@ from PyInstaller.utils.hooks import collect_all
 
 datas = [('web_admin.html', '.'), ('icon.png', '.'), ('sources.example.json', '.'), ('.env.example', '.')]
 binaries = []
-hiddenimports = ['server', 'paths', 'run_daily_brief', 'llm_curator', 'distributor_manager']
+hiddenimports = ['server', 'paths', 'run_daily_brief', 'llm_curator', 'distributor_manager', 'scraper_macro', 'yfinance', 'plyer']
 tmp_ret = collect_all('uvicorn')
 datas += tmp_ret[0]; binaries += tmp_ret[1]; hiddenimports += tmp_ret[2]
 tmp_ret = collect_all('webview')
