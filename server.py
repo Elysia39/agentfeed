@@ -286,9 +286,9 @@ async def api_get_env_status():
         ["~/.local/bin/obsidian", "/opt/homebrew/bin/obsidian", "/Applications/Obsidian.app"]
     )
 
-    agent_cli_check = check_tool(
-        ["agy", "codex", "claude"],
-        ["~/.local/bin/agy", "/opt/homebrew/bin/agy", "~/.local/bin/codex", "~/.local/bin/claude"]
+    feishu_check = check_tool(
+        ["feishu-cli", "lark-cli", "feishu", "lark"],
+        ["/Applications/Feishu.app", "/Applications/Lark.app", "~/Applications/Feishu.app", "/opt/homebrew/bin/feishu-cli", "~/.local/bin/feishu-cli"]
     )
 
     return {
@@ -322,6 +322,16 @@ async def api_get_env_status():
             "official_url": "https://github.com/defuddle/defuddle",
             "latest_version": "v1.0+"
         },
+        "feishu": {
+            **feishu_check,
+            "name": "飞书 & 飞书 CLI",
+            "tag": "多端分发与云文档",
+            "desc": "字节跳动飞书协同平台与开放接口，支持群机器人每日智能卡片推送与全源云文档自动创建归档。",
+            "required_for": "每日全源智能简报自动推送至飞书群、自动生成飞书云文档知识库",
+            "install_cmd": "brew install --cask feishu && npm install -g feishu-cli",
+            "official_url": "https://www.feishu.cn/download",
+            "latest_version": "v7.0+ (Latest)"
+        },
         "obsidian": {
             **obsidian_check,
             "name": "Obsidian & CLI",
@@ -331,16 +341,6 @@ async def api_get_env_status():
             "install_cmd": "brew install obsidian && npm install -g obsidian-cli",
             "official_url": "https://obsidian.md",
             "latest_version": "v1.7+"
-        },
-        "agent_cli": {
-            **agent_cli_check,
-            "name": "Antigravity CLI (agy)",
-            "tag": "本地内置 Agent 核心",
-            "desc": "本机内置 Agent 调度与离线规则提炼引擎。",
-            "required_for": "未配置外置大模型 Key 时的零成本本地兜底提炼",
-            "install_cmd": "npm install -g @google/antigravity",
-            "official_url": "https://github.com/google/antigravity",
-            "latest_version": "v2.0+"
         }
     }
 
