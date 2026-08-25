@@ -45,7 +45,7 @@
         </button>
 
         <!-- 导出配置 (备份) -->
-        <button onclick="exportConfig()" title="导出全量配置 JSON 备份" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium px-3 py-2 rounded-lg flex items-center space-x-1.5 border border-slate-200 shadow-xs transition cursor-pointer">
+        <button onclick="openExportModal()" title="导出全量配置 JSON 备份" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium px-3 py-2 rounded-lg flex items-center space-x-1.5 border border-slate-200 shadow-xs transition cursor-pointer">
           <i data-lucide="download" class="w-3.5 h-3.5 text-emerald-600"></i>
           <span>导出配置</span>
         </button>
@@ -1290,11 +1290,66 @@
     </div>
   </div>
 
-        <div class="flex items-center justify-end space-x-3 pt-4 border-t border-slate-100">
-          <button type="button" onclick="closeModal()" class="text-xs px-4 py-2 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 font-medium">取消</button>
-          <button type="submit" class="text-xs px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-sm">保存配置</button>
+  <!-- Export Configuration Modal -->
+  <div id="export-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-4">
+      
+      <!-- Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100">
+            <i data-lucide="download-cloud" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-base text-slate-900">导出配置文件</h3>
+            <p class="text-xs text-slate-500">备份全量感知矩阵、大模型与分发配置，方便迁移到新设备</p>
+          </div>
         </div>
-      </form>
+        <button onclick="closeExportModal()" class="text-slate-400 hover:text-slate-600 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Config Summary Overview -->
+      <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 space-y-2">
+        <div class="flex items-center justify-between font-bold text-xs text-slate-800">
+          <span class="flex items-center space-x-1.5">
+            <i data-lucide="layers" class="w-4 h-4 text-emerald-600"></i>
+            <span>📦 本地配置概览</span>
+          </span>
+          <span id="export-summary-count" class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full text-[11px] font-mono font-bold">11 个板块就绪</span>
+        </div>
+        <div id="export-summary-stats" class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px] text-slate-600 pt-1.5 border-t border-slate-200">
+          <!-- Dynamically populated stats -->
+        </div>
+      </div>
+
+      <!-- JSON Code Preview Box with One-Click Copy -->
+      <div class="space-y-1.5">
+        <div class="flex items-center justify-between">
+          <label class="block text-xs font-bold text-slate-700">JSON 配置代码：</label>
+          <button type="button" onclick="copyExportJson()" class="text-xs text-blue-600 hover:text-blue-800 flex items-center space-x-1 font-medium cursor-pointer">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+            <span id="copy-json-btn-text">一键复制全部代码</span>
+          </button>
+        </div>
+        <textarea id="export-json-textarea" readonly rows="7" class="w-full text-xs font-mono bg-slate-900 text-slate-100 rounded-xl p-3 focus:outline-none select-all"></textarea>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center justify-between pt-3 border-t border-slate-100">
+        <button type="button" onclick="saveExportFileToDownloads()" class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-lg flex items-center space-x-1.5 shadow-sm transition cursor-pointer">
+          <i data-lucide="save" class="w-4 h-4"></i>
+          <span>💾 另存为 .json 文件 (保存到下载目录)</span>
+        </button>
+        
+        <div class="flex items-center space-x-2">
+          <button type="button" onclick="closeExportModal()" class="text-xs text-slate-600 hover:text-slate-800 px-4 py-2 rounded-lg font-medium transition cursor-pointer">
+            关闭
+          </button>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -3101,10 +3156,88 @@
       }, 4000);
     }
 
-    function exportConfig() {
+    function openExportModal() {
       try {
         const dataStr = JSON.stringify(state, null, 2);
-        const blob = new Blob([dataStr], { type: 'application/json' });
+        document.getElementById('export-json-textarea').value = dataStr;
+
+        // Calculate summary stats
+        const rssCount = (state.rss_sources || []).length;
+        const webCount = (state.news_websites || []).length;
+        const blogCount = (state.x_bloggers || []).length;
+        const subCount = (state.substack_newsletters || []).length;
+        const wxCount = (state.wechat_accounts || []).length;
+        const tgCount = (state.telegram_channels || []).length;
+        const dcCount = (state.discord_channels || []).length;
+        const hnCount = (state.hackernews_topics || state.hacker_news || []).length;
+        const redditCount = (state.reddit_subreddits || []).length;
+        const arxivCount = (state.arxiv_categories || []).length;
+        const secCount = (state.sec_filings?.tickers || []).length;
+
+        const totalItems = rssCount + webCount + blogCount + subCount + wxCount + tgCount + dcCount + hnCount + redditCount + arxivCount + secCount;
+        document.getElementById('export-summary-count').innerText = `${totalItems} 个已配置订阅项`;
+
+        const statsHtml = `
+          <div>📡 RSS / XML: <b>${rssCount}</b></div>
+          <div>🌐 网站媒体: <b>${webCount}</b></div>
+          <div>𝕏 行业大V: <b>${blogCount}</b></div>
+          <div>📑 Substack: <b>${subCount}</b></div>
+          <div>💬 微信公众号: <b>${wxCount}</b></div>
+          <div>✈️ TG / Discord: <b>${tgCount + dcCount}</b></div>
+          <div>💻 HN / Reddit: <b>${hnCount + redditCount}</b></div>
+          <div>🔬 ArXiv & AI: <b>${arxivCount}</b></div>
+          <div>📊 重点标的: <b>${secCount}</b></div>
+        `;
+        document.getElementById('export-summary-stats').innerHTML = statsHtml;
+        document.getElementById('copy-json-btn-text').innerText = "一键复制全部代码";
+
+        document.getElementById('export-modal').classList.remove('hidden');
+        lucide.createIcons();
+      } catch (e) {
+        showToast("打开导出面板失败: " + e, "error");
+      }
+    }
+
+    function closeExportModal() {
+      document.getElementById('export-modal').classList.add('hidden');
+    }
+
+    async function copyExportJson() {
+      try {
+        const text = document.getElementById('export-json-textarea').value;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const textarea = document.getElementById('export-json-textarea');
+          textarea.select();
+          document.execCommand('copy');
+        }
+        document.getElementById('copy-json-btn-text').innerText = "✅ 已复制到剪贴板！";
+        showToast("📋 全量 JSON 配置代码已复制到剪贴板！在新设备上点击【导入配置 -> 粘贴】即可快速恢复。");
+      } catch (e) {
+        showToast("复制失败，请手动在代码框全选复制: " + e, "error");
+      }
+    }
+
+    async function saveExportFileToDownloads() {
+      try {
+        const res = await fetch('/api/config/save-to-downloads', { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`🎉 配置文件已成功保存到: ${data.file_path}`);
+          alert(`✅ 配置文件已成功导出保存！\n\n文件路径:\n${data.file_path}\n\n您可以在新设备上点击【导入配置】并选择此文件一键克隆。`);
+        } else {
+          exportConfigFallback();
+        }
+      } catch (e) {
+        exportConfigFallback();
+      }
+    }
+
+    function exportConfigFallback() {
+      try {
+        const dataStr = JSON.stringify(state, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json;charset=utf-8' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         const d = new Date();
@@ -3115,9 +3248,9 @@
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-        showToast("📦 全量配置文件已导出下载！在新设备上点击【导入配置】即可一键还原。");
-      } catch (e) {
-        showToast("导出失败: " + e, "error");
+        showToast("📦 配置文件已导出下载！");
+      } catch (err) {
+        showToast("下载失败: " + err, "error");
       }
     }
 

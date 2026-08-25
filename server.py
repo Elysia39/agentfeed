@@ -96,10 +96,25 @@ async def api_export_config():
     today = datetime.date.today().strftime("%Y-%m-%d")
     filename = f"agentfeed-config-{today}.json"
     return Response(
-        content=content,
-        media_type="application/json",
+        content=content.encode("utf-8"),
+        media_type="application/json; charset=utf-8",
         headers={"Content-Disposition": f'attachment; filename="{filename}"'}
     )
+
+@app.post("/api/config/save-to-downloads")
+async def api_save_to_downloads():
+    """Save current configuration directly to ~/Downloads/agentfeed-config-YYYY-MM-DD.json"""
+    try:
+        downloads_dir = os.path.expanduser("~/Downloads")
+        os.makedirs(downloads_dir, exist_ok=True)
+        today_str = datetime.date.today().strftime("%Y-%m-%d")
+        target_file = os.path.join(downloads_dir, f"agentfeed-config-{today_str}.json")
+        data = load_sources()
+        with open(target_file, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+        return {"success": True, "file_path": target_file, "file_name": os.path.basename(target_file)}
+    except Exception as e:
+        return {"success": False, "error": str(e)}
 
 @app.post("/api/config/import")
 async def api_import_config(request: Request):
