@@ -2,7 +2,8 @@ import os
 import json
 import glob
 import subprocess
-from fastapi import FastAPI, Request
+import datetime
+from fastapi import FastAPI, Request, Response
 from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from scraper_rss import test_rsshub_latency, fetch_single_feed_preview
@@ -87,6 +88,49 @@ async def api_save_sources(request: Request):
     data = await request.json()
     save_sources(data)
     return {"status": "ok", "message": "配置已成功保存！"}
+
+@app.get("/api/config/export")
+async def api_export_config():
+    data = load_sources()
+    content = json.dumps(data, ensure_ascii=False, indent=2)
+    today = datetime.date.today().strftime("%Y-%m-%d")
+    filename = f"agentfeed-config-{today}.json"
+    return Response(
+        content=content,
+        media_type="application/json",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'}
+    )
+
+@app.post("/api/config/import")
+async def api_import_config(request: Request):
+    try:
+        payload = await request.json()
+        imported_data = payload.get("config") if isinstance(payload, dict) and "config" in payload else payload
+        mode = payload.get("mode", "overwrite") if isinstance(payload, dict) else "overwrite"
+        
+        if not isinstance(imported_data, dict):
+            return JSONResponse(status_code=400, content={"status": "error", "message": "配置文件格式错误，必须是合法的 JSON 对象！"})
+        
+        if mode == "merge":
+            current_data = load_sources()
+            for key, val in imported_data.items():
+                if isinstance(val, list) and key in current_data and isinstance(current_data[key], list):
+                    existing_keys = {item.get("id") or item.get("url") or item.get("symbol") or item.get("name") or item.get("handle") for item in current_data[key] if isinstance(item, dict)}
+                    for item in val:
+                        item_key = item.get("id") or item.get("url") or item.get("symbol") or item.get("name") or item.get("handle") if isinstance(item, dict) else None
+                        if not item_key or item_key not in existing_keys:
+                            current_data[key].append(item)
+                elif isinstance(val, dict) and key in current_data and isinstance(current_data[key], dict):
+                    current_data[key].update(val)
+                else:
+                    current_data[key] = val
+            save_sources(current_data)
+            return {"status": "ok", "message": "配置已成功增量合并！", "sources": current_data}
+        else:
+            save_sources(imported_data)
+            return {"status": "ok", "message": "新设备配置已成功全量导入并生效！", "sources": imported_data}
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"status": "error", "message": f"导入失败: {str(e)}"})
 
 @app.get("/api/rsshub-ping")
 async def api_rsshub_ping():
