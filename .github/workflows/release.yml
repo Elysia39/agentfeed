@@ -38,7 +38,7 @@ jobs:
           pip install -r requirements.txt
           pip install pyinstaller
 
-      - name: Build macOS Application Package
+      - name: Build macOS Application Package & DMG Installer
         if: runner.os == 'macOS'
         run: |
           pyinstaller --noconfirm --onedir --windowed \
@@ -57,6 +57,9 @@ jobs:
             --add-data "sources.example.json:." \
             --add-data ".env.example:." \
             desktop.py
+          chmod +x build_dmg.sh
+          ./build_dmg.sh
+          cp dist/AgentFeed-macOS.dmg ./
           cd dist
           zip -r ../AgentFeed-macOS.zip AgentFeed.app AgentFeed
 
@@ -107,8 +110,9 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.asset_name }}
-          path: ${{ matrix.asset_name }}
+          name: artifacts-${{ matrix.os }}
+          path: |
+            AgentFeed-*
 
   release:
     name: 📦 Publish GitHub Release
@@ -137,10 +141,12 @@ jobs:
           body: |
             ## 📡 AgentFeed Release ${{ github.ref_name }}
 
-            欢迎下载 **AgentFeed** 独立桌面应用安装包！
+            欢迎下载 **AgentFeed** 官方独立桌面应用安装包！
 
             ### 📦 包含的跨平台二进制安装包：
-            - 🍏 **macOS (Apple Silicon & Intel)**: `AgentFeed-macOS.zip` (解压双击 `AgentFeed.app` 即可直接运行)
+            - 🍏 **macOS (Apple Silicon & Intel)**:
+              - 💿 **`AgentFeed-macOS.dmg`** (🌟 **强烈推荐**：macOS 标准磁盘镜像安装包。双击挂载后直接拖拽 `AgentFeed` 图标进 `Applications` 应用程序即可，后续更新直接覆盖替换旧版本，干净无残留！)
+              - 🗜️ **`AgentFeed-macOS.zip`** (便携版压缩包，解压双击 `AgentFeed.app` 即可直接运行)
             - 🪟 **Windows (x64)**: `AgentFeed-Windows.zip` (解压双击 `AgentFeed/AgentFeed.exe` 即可运行)
             - 🐧 **Linux (x64)**: `AgentFeed-Linux.tar.gz` (解压运行 `./AgentFeed`)
 
