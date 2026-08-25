@@ -27,6 +27,9 @@ import server
 import run_daily_brief
 import paths
 
+if hasattr(server, "ensure_full_mac_path"):
+    server.ensure_full_mac_path()
+
 def find_available_port(start_port: int = 9830, host: str = "127.0.0.1") -> int:
     """Find an available port starting from start_port."""
     for p in range(start_port, start_port + 20):

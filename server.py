@@ -1,8 +1,13 @@
 import os
+import sys
 import json
 import glob
+import shutil
 import subprocess
 import datetime
+import plistlib
+import re
+import importlib.metadata
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -20,7 +25,40 @@ from distributor_feishu_doc import create_feishu_doc
 from distributor_obsidian import save_note_to_obsidian, get_obsidian_vaults
 from distributor_email import send_email_brief
 from paths import SOURCES_FILE, HISTORY_FILE, HTML_FILE, ICON_FILE, get_resource_path
-import sys
+
+def ensure_full_mac_path():
+    """Ensure complete system PATH is available even when launched as a standalone macOS App bundle."""
+    paths = [
+        "/opt/homebrew/bin",
+        "/opt/homebrew/sbin",
+        "/usr/local/bin",
+        "/usr/local/sbin",
+        os.path.expanduser("~/.local/bin"),
+        os.path.expanduser("~/.bun/bin"),
+        os.path.expanduser("~/.cargo/bin"),
+        "/usr/bin",
+        "/bin",
+        "/usr/sbin",
+        "/sbin",
+    ]
+    for nvm_bin in glob.glob(os.path.expanduser("~/.nvm/versions/node/*/bin")):
+        paths.append(nvm_bin)
+    for py_bin in glob.glob(os.path.expanduser("~/Library/Python/*/bin")):
+        paths.append(py_bin)
+    for extra in ["~/.fnm/current/bin", "~/.volta/bin", "~/.asdf/shims", "~/.npm-global/bin"]:
+        p = os.path.expanduser(extra)
+        if os.path.exists(p):
+            paths.append(p)
+            
+    existing = os.environ.get("PATH", "").split(":")
+    combined = []
+    for p in paths + existing:
+        if p and p not in combined and os.path.exists(p):
+            combined.append(p)
+    os.environ["PATH"] = ":".join(combined)
+    return os.environ["PATH"]
+
+ensure_full_mac_path()
 
 app = FastAPI(
     title="AgentFeed - Universal Perception & Ingestion Framework for AI Agents",
@@ -248,11 +286,7 @@ async def api_test_llm(request: Request):
 
 @app.get("/api/env-status")
 async def api_get_env_status():
-    import shutil
-    import subprocess
-    import plistlib
-    import re
-    import importlib.metadata
+    ensure_full_mac_path()
 
     CURRENT_AGENTFEED_VERSION = "v1.0.9"
 
@@ -265,9 +299,20 @@ async def api_get_env_status():
             expanded = os.path.expanduser(app)
             if os.path.exists(expanded):
                 return {"installed": True, "path": expanded, "type": "app"}
+        # also search glob for node bins if any name matches
+        for nvm_bin in glob.glob(os.path.expanduser("~/.nvm/versions/node/*/bin")):
+            for name in names:
+                target = os.path.join(nvm_bin, name)
+                if os.path.exists(target):
+                    return {"installed": True, "path": target, "type": "cli"}
+        for py_bin in glob.glob(os.path.expanduser("~/Library/Python/*/bin")):
+            for name in names:
+                target = os.path.join(py_bin, name)
+                if os.path.exists(target):
+                    return {"installed": True, "path": target, "type": "cli"}
         return {"installed": False, "path": None, "type": None}
 
-    def get_tool_version(name, cli_cmd=None, app_paths=[]):
+    def get_tool_version(name, cli_cmd=None, app_paths=[], detected_path=None):
         if name == "camoufox":
             try:
                 res = subprocess.run(["python3", "-c", "import importlib.metadata; print(importlib.metadata.version('camoufox'))"], capture_output=True, text=True, timeout=2)
@@ -276,7 +321,7 @@ async def api_get_env_status():
                     return f"v{ver}" if not ver.startswith("v") else ver
             except Exception:
                 pass
-            return "v0.4.11"
+            return "v0.5.5"
         for app_path in app_paths:
             plist_file = os.path.join(os.path.expanduser(app_path), "Contents", "Info.plist")
             if os.path.exists(plist_file):
@@ -288,10 +333,10 @@ async def api_get_env_status():
                             return f"v{ver}" if not str(ver).startswith("v") else str(ver)
                 except Exception:
                     pass
-        cmd_name = cli_cmd or name
-        if shutil.which(cmd_name) or os.path.exists(os.path.expanduser(cmd_name)):
+        cmd_path = detected_path or (shutil.which(cli_cmd or name))
+        if cmd_path and os.path.exists(cmd_path):
             try:
-                res = subprocess.run(f"{cmd_name} --version", capture_output=True, text=True, timeout=2, shell=True)
+                res = subprocess.run(f"{cmd_path} --version", capture_output=True, text=True, timeout=2, shell=True)
                 out = (res.stdout or res.stderr).strip()
                 match = re.search(r"(\d+\.\d+(\.\d+)?)", out)
                 if match:
@@ -311,7 +356,7 @@ async def api_get_env_status():
             camoufox_check = {"installed": True, "path": getattr(camoufox, "__file__", "python_module"), "type": "module"}
         except Exception:
             pass
-    camoufox_cur_ver = get_tool_version("camoufox", "camoufox-tool") if camoufox_check["installed"] else "未安装"
+    camoufox_cur_ver = get_tool_version("camoufox", "camoufox-tool", detected_path=camoufox_check.get("path")) if camoufox_check["installed"] else "未安装"
     camoufox_latest_ver = "v0.5.5"
 
     # 2. Ego Lite
@@ -319,31 +364,31 @@ async def api_get_env_status():
         ["ego-browser", "egolite", "ego"],
         ["/Applications/Ego Lite.app", "/Applications/ego-browser.app", "/Applications/EgoBrowser.app", "~/Applications/Ego Lite.app", "/Applications/EgoLite.app"]
     )
-    ego_cur_ver = get_tool_version("ego", "ego-browser", ["/Applications/Ego Lite.app", "/Applications/ego-browser.app"]) if ego_check["installed"] else "未安装"
+    ego_cur_ver = get_tool_version("ego", "ego-browser", ["/Applications/Ego Lite.app", "/Applications/ego-browser.app"], detected_path=ego_check.get("path")) if ego_check["installed"] else "未安装"
     ego_latest_ver = "v0.4.7+"
 
     # 3. Defuddle
     defuddle_check = check_tool(
         ["defuddle"],
-        ["~/.local/bin/defuddle", "/opt/homebrew/bin/defuddle", "/usr/local/bin/defuddle"]
+        ["~/.local/bin/defuddle", "/opt/homebrew/bin/defuddle", "/usr/local/bin/defuddle", "/Applications/Defuddle.app", "~/Applications/Defuddle.app"]
     )
-    defuddle_cur_ver = get_tool_version("defuddle", "defuddle") if defuddle_check["installed"] else "未安装"
+    defuddle_cur_ver = get_tool_version("defuddle", "defuddle", detected_path=defuddle_check.get("path")) if defuddle_check["installed"] else "未安装"
     defuddle_latest_ver = "v0.19.3"
 
     # 4. Feishu
     feishu_check = check_tool(
-        ["feishu-cli", "lark-cli", "feishu", "lark"],
+        ["feishu", "feishu-cli", "lark", "lark-cli"],
         ["/Applications/Feishu.app", "/Applications/Lark.app", "~/Applications/Feishu.app", "/opt/homebrew/bin/feishu-cli", "~/.local/bin/feishu-cli"]
     )
-    feishu_cur_ver = get_tool_version("feishu", "feishu-cli", ["/Applications/Feishu.app", "/Applications/Lark.app"]) if feishu_check["installed"] else "未安装"
+    feishu_cur_ver = get_tool_version("feishu", "feishu-cli", ["/Applications/Feishu.app", "/Applications/Lark.app"], detected_path=feishu_check.get("path")) if feishu_check["installed"] else "未安装"
     feishu_latest_ver = "v7.40+ / 131.0+"
 
     # 5. Obsidian
     obsidian_check = check_tool(
         ["obsidian", "obsidian-cli"],
-        ["~/.local/bin/obsidian", "/opt/homebrew/bin/obsidian", "/Applications/Obsidian.app"]
+        ["~/.local/bin/obsidian", "/opt/homebrew/bin/obsidian", "/Applications/Obsidian.app", "~/Applications/Obsidian.app"]
     )
-    obsidian_cur_ver = get_tool_version("obsidian", "obsidian", ["/Applications/Obsidian.app"]) if obsidian_check["installed"] else "未安装"
+    obsidian_cur_ver = get_tool_version("obsidian", "obsidian", ["/Applications/Obsidian.app"], detected_path=obsidian_check.get("path")) if obsidian_check["installed"] else "未安装"
     obsidian_latest_ver = "v1.8+ / 1.12.7"
 
     return {
