@@ -60,7 +60,43 @@
   </header>
 
   <!-- Main Container -->
-  <main class="max-w-6xl mx-auto px-4 py-6 flex-1 w-full space-y-8">
+  <main class="max-w-6xl mx-auto px-4 py-6 flex-1 w-full space-y-6">
+
+    <!-- Top System Bar: Local Core Drivers & Anti-Scraping Tools Health -->
+    <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-indigo-950 text-white rounded-2xl p-4 shadow-md space-y-3">
+      <div class="flex items-center justify-between pb-2.5 border-b border-slate-700/80">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-7 h-7 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center border border-indigo-400/30 shrink-0">
+            <i data-lucide="shield-check" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs font-bold tracking-tight text-white">🛠️ 本地运行环境与底层驱动检测</span>
+              <span id="env-overall-badge" class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30">检测中...</span>
+            </div>
+            <p class="text-[10px] text-slate-400 mt-0.5">自动探测 Camoufox (反爬防封)、Ego Lite (隔离浏览器)、Defuddle、Obsidian 等核心驱动</p>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-2 shrink-0">
+          <button type="button" onclick="checkEnvStatus(true)" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-2.5 py-1.5 rounded-lg flex items-center space-x-1.5 transition font-medium cursor-pointer">
+            <i data-lucide="refresh-cw" class="w-3 h-3 text-indigo-400"></i>
+            <span>重新检测</span>
+          </button>
+          <button type="button" onclick="openToolingModal()" class="text-xs bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white px-3 py-1.5 rounded-lg flex items-center space-x-1.5 font-semibold shadow-xs transition cursor-pointer">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+            <span>📥 下载安装与最新版指南</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Drivers Grid -->
+      <div id="env-drivers-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 text-xs">
+        <div class="p-2.5 bg-slate-800/60 rounded-xl border border-slate-700/60 text-center text-slate-400 text-xs">
+          正在探测本地底层驱动...
+        </div>
+      </div>
+    </div>
 
     <!-- Top Config Card: RSSHub Instances -->
     <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs space-y-3">
@@ -1353,6 +1389,42 @@
     </div>
   </div>
 
+  <!-- Tooling & Driver Install Center Modal -->
+  <div id="tooling-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
+      
+      <!-- Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 shrink-0">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-100">
+            <i data-lucide="cpu" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-base text-slate-900">核心驱动依赖与安装中心</h3>
+            <p class="text-xs text-slate-500">检测底层浏览器引擎、反爬组件与知识库联动状态，提供最新版一键下载</p>
+          </div>
+        </div>
+        <button onclick="closeToolingModal()" class="text-slate-400 hover:text-slate-600 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Driver Cards List (Scrollable) -->
+      <div id="tooling-modal-list" class="overflow-y-auto space-y-3.5 pr-1 flex-1 text-xs">
+        <!-- Dynamically rendered detailed cards -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex items-center justify-between pt-3 border-t border-slate-100 shrink-0">
+        <span class="text-[11px] text-slate-400">所有底层驱动均 100% 开源安全，安装后点击「重新检测」即刻生效</span>
+        <button type="button" onclick="closeToolingModal()" class="text-xs bg-slate-900 hover:bg-slate-800 text-white font-semibold px-4 py-2 rounded-lg transition cursor-pointer">
+          完成
+        </button>
+      </div>
+
+    </div>
+  </div>
+
   <!-- Add SEC Ticker Modal -->
   <div id="sec-ticker-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4">
@@ -1443,6 +1515,7 @@
       try {
         const res = await fetch('/api/sources');
         state = await res.json();
+        checkEnvStatus();
         
         // Instances
         const inst = state.rsshub_instances || {};
@@ -3398,6 +3471,192 @@
         btn.disabled = false;
         btn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5"></i><span>导入并立即应用</span>`;
         lucide.createIcons();
+      }
+    }
+
+    // ==========================================
+    // LOCAL DRIVERS & ENVIRONMENT HEALTH CENTER
+    // ==========================================
+    let cachedEnvData = null;
+
+    async function checkEnvStatus(showToastFlag = false) {
+      const grid = document.getElementById('env-drivers-grid');
+      const overallBadge = document.getElementById('env-overall-badge');
+      if (!grid) return;
+
+      try {
+        const res = await fetch('/api/env-status');
+        const data = await res.json();
+        cachedEnvData = data;
+
+        let total = 0;
+        let installedCount = 0;
+        let html = '';
+
+        const iconMap = {
+          camoufox: '🦊',
+          ego_browser: '🌐',
+          defuddle: '📑',
+          obsidian: '💎',
+          agent_cli: '🤖'
+        };
+
+        for (const [key, item] of Object.entries(data)) {
+          total++;
+          const isOk = !!item.installed;
+          if (isOk) installedCount++;
+
+          const icon = iconMap[key] || '⚙️';
+          const statusBg = isOk ? 'bg-emerald-950/40 border-emerald-500/40 text-emerald-300' : 'bg-amber-950/40 border-amber-500/40 text-amber-300';
+          const dotColor = isOk ? 'bg-emerald-400' : 'bg-amber-400';
+          const statusText = isOk ? '已就绪' : '未检测到';
+
+          html += `
+            <div onclick="openToolingModal('${key}')" class="p-2.5 rounded-xl border ${statusBg} flex flex-col justify-between space-y-2 cursor-pointer hover:scale-[1.02] transition">
+              <div class="flex items-start justify-between">
+                <div class="flex items-center space-x-1.5 font-bold text-white text-xs">
+                  <span>${icon}</span>
+                  <span class="truncate">${item.name.split(' ')[0]}</span>
+                </div>
+                <div class="w-2 h-2 rounded-full ${dotColor} shrink-0 mt-0.5"></div>
+              </div>
+              <div class="flex items-center justify-between text-[10px] text-slate-300">
+                <span class="text-slate-400 truncate">${item.tag}</span>
+                <span class="font-bold ${isOk ? 'text-emerald-400' : 'text-amber-400'}">${statusText}</span>
+              </div>
+            </div>
+          `;
+        }
+
+        grid.innerHTML = html;
+
+        if (overallBadge) {
+          if (installedCount >= 4) {
+            overallBadge.className = "text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30";
+            overallBadge.innerText = `✅ ${installedCount}/${total} 核心驱动已就绪`;
+          } else {
+            overallBadge.className = "text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30";
+            overallBadge.innerText = `⚠️ ${installedCount}/${total} 驱动就绪 (点击安装)`;
+          }
+        }
+
+        if (showToastFlag) {
+          showToast(`🛠️ 本地底层驱动检测完毕：${installedCount}/${total} 已安装就绪`);
+        }
+      } catch (e) {
+        if (grid) {
+          grid.innerHTML = `<div class="col-span-full p-2 bg-red-900/30 text-red-300 rounded-xl text-center text-xs">检测环境接口异常: ${e}</div>`;
+        }
+      }
+    }
+
+    function openToolingModal(highlightKey = null) {
+      const modalList = document.getElementById('tooling-modal-list');
+      if (!modalList || !cachedEnvData) return;
+
+      const iconMap = {
+        camoufox: '🦊',
+        ego_browser: '🌐',
+        defuddle: '📑',
+        obsidian: '💎',
+        agent_cli: '🤖'
+      };
+
+      let html = '';
+      for (const [key, item] of Object.entries(cachedEnvData)) {
+        const isOk = !!item.installed;
+        const icon = iconMap[key] || '⚙️';
+        const isHighlight = highlightKey === key;
+
+        html += `
+          <div class="p-4 rounded-xl border transition ${isHighlight ? 'bg-indigo-50/70 border-indigo-300 ring-2 ring-indigo-400/30' : 'bg-slate-50 border-slate-200'} space-y-2.5">
+            <!-- Header -->
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2.5">
+                <span class="text-xl">${icon}</span>
+                <div>
+                  <div class="flex items-center space-x-2">
+                    <span class="font-bold text-slate-900 text-sm">${item.name}</span>
+                    <span class="text-[10px] px-1.5 py-0.2 rounded bg-slate-200 text-slate-700 font-medium">${item.tag}</span>
+                    <span class="text-[10px] px-1.5 py-0.2 rounded bg-blue-100 text-blue-800 font-mono">${item.latest_version}</span>
+                  </div>
+                  <p class="text-[11px] text-slate-500 mt-0.5">${item.desc}</p>
+                </div>
+              </div>
+              <div class="shrink-0 text-right">
+                ${isOk ? `
+                  <span class="inline-flex items-center space-x-1 text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
+                    <i data-lucide="check-circle-2" class="w-3 h-3 text-emerald-600"></i>
+                    <span>已就绪</span>
+                  </span>
+                ` : `
+                  <span class="inline-flex items-center space-x-1 text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
+                    <i data-lucide="alert-triangle" class="w-3 h-3 text-amber-600"></i>
+                    <span>未检测到</span>
+                  </span>
+                `}
+              </div>
+            </div>
+
+            <!-- Path info if installed -->
+            ${isOk && item.path ? `
+              <div class="text-[11px] font-mono text-slate-600 bg-white p-2 rounded-lg border border-slate-200/80 flex items-center justify-between">
+                <span class="truncate">📍 本地路径: <b>${item.path}</b></span>
+                <span class="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded text-slate-500 uppercase">${item.type}</span>
+              </div>
+            ` : ''}
+
+            <!-- Required For Note -->
+            <div class="text-[11px] text-slate-600 flex items-center space-x-1">
+              <span class="font-semibold text-slate-700">🎯 在 AgentFeed 中的作用：</span>
+              <span>${item.required_for}</span>
+            </div>
+
+            <!-- Action Bar -->
+            <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-200/70">
+              <div class="flex items-center space-x-2 font-mono text-[11px] bg-slate-900 text-slate-100 px-3 py-1.5 rounded-lg flex-1 overflow-x-auto">
+                <span class="text-slate-400 select-none">$</span>
+                <span class="select-all truncate">${item.install_cmd}</span>
+              </div>
+              <div class="flex items-center space-x-2 shrink-0">
+                <button type="button" onclick="copyToolCmd('${item.install_cmd}', this)" class="text-xs bg-white hover:bg-slate-100 text-slate-800 border border-slate-200 px-3 py-1.5 rounded-lg font-medium flex items-center space-x-1 transition cursor-pointer shadow-xs">
+                  <i data-lucide="copy" class="w-3 h-3 text-slate-600"></i>
+                  <span>复制安装命令</span>
+                </button>
+                <a href="${item.official_url}" target="_blank" class="text-xs bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg font-medium flex items-center space-x-1 transition cursor-pointer shadow-xs">
+                  <i data-lucide="external-link" class="w-3 h-3"></i>
+                  <span>官网 / GitHub Release</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      modalList.innerHTML = html;
+      document.getElementById('tooling-modal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeToolingModal() {
+      document.getElementById('tooling-modal').classList.add('hidden');
+    }
+
+    async function copyToolCmd(cmd, btn) {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(cmd);
+        }
+        const originalText = btn.innerHTML;
+        btn.innerHTML = `<i data-lucide="check" class="w-3 h-3 text-emerald-600"></i><span class="text-emerald-700 font-bold">已复制命令！</span>`;
+        lucide.createIcons();
+        showToast(`📋 已复制安装命令！请在终端 (Terminal) 中粘贴执行：\n${cmd}`);
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          lucide.createIcons();
+        }, 2500);
+      } catch (e) {
+        showToast("复制命令失败: " + e, "error");
       }
     }
 

@@ -246,6 +246,104 @@ async def api_test_llm(request: Request):
         "curated": curated
     }
 
+@app.get("/api/env-status")
+async def api_get_env_status():
+    import shutil
+    def check_tool(names, app_paths=[]):
+        for name in names:
+            p = shutil.which(name)
+            if p:
+                return {"installed": True, "path": p, "type": "cli"}
+        for app in app_paths:
+            expanded = os.path.expanduser(app)
+            if os.path.exists(expanded):
+                return {"installed": True, "path": expanded, "type": "app"}
+        return {"installed": False, "path": None, "type": None}
+
+    camoufox_check = check_tool(
+        ["camoufox-tool", "camoufox"],
+        ["~/.local/bin/camoufox-tool", "~/.local/bin/camoufox", "/opt/homebrew/bin/camoufox"]
+    )
+    if not camoufox_check["installed"]:
+        try:
+            import camoufox
+            camoufox_check = {"installed": True, "path": getattr(camoufox, "__file__", "python_module"), "type": "module"}
+        except Exception:
+            pass
+
+    ego_check = check_tool(
+        ["ego-browser", "egolite", "ego"],
+        ["/Applications/Ego Lite.app", "/Applications/ego-browser.app", "/Applications/EgoBrowser.app", "~/Applications/Ego Lite.app", "/Applications/EgoLite.app"]
+    )
+
+    defuddle_check = check_tool(
+        ["defuddle"],
+        ["~/.local/bin/defuddle", "/opt/homebrew/bin/defuddle", "/usr/local/bin/defuddle"]
+    )
+
+    obsidian_check = check_tool(
+        ["obsidian", "obsidian-cli"],
+        ["~/.local/bin/obsidian", "/opt/homebrew/bin/obsidian", "/Applications/Obsidian.app"]
+    )
+
+    agent_cli_check = check_tool(
+        ["agy", "codex", "claude"],
+        ["~/.local/bin/agy", "/opt/homebrew/bin/agy", "~/.local/bin/codex", "~/.local/bin/claude"]
+    )
+
+    return {
+        "camoufox": {
+            **camoufox_check,
+            "name": "Camoufox",
+            "tag": "反爬与指纹保护",
+            "desc": "基于 Firefox 的防封与防指纹浏览器引擎，可秒过 Cloudflare 5秒盾、Turnstile 验证码与 WAF 反爬保护。",
+            "required_for": "网站媒体、深度专栏等抗反爬免登录抓取",
+            "install_cmd": "pip install 'camoufox[geoip]' && camoufox fetch",
+            "official_url": "https://github.com/daijro/camoufox",
+            "latest_version": "v0.4.11+"
+        },
+        "ego_browser": {
+            **ego_check,
+            "name": "Ego Lite / Ego Browser",
+            "tag": "AI Agent 隔离浏览器",
+            "desc": "专为 AI Agent 打造的 Chromium 隔离会话浏览器，复用登录态免竞争自动化操作。",
+            "required_for": "网页免登录自动化与多标签页深度采集",
+            "install_cmd": "open https://ego.fun",
+            "official_url": "https://ego.fun",
+            "latest_version": "v1.2.3+"
+        },
+        "defuddle": {
+            **defuddle_check,
+            "name": "Defuddle CLI",
+            "tag": "正文与 Markdown 提取",
+            "desc": "智能网页正文与高密度 Markdown 提取引擎，自动剔除广告、导航栏等干扰元素。",
+            "required_for": "全网媒体网站净版正文与长文提炼",
+            "install_cmd": "npm install -g defuddle",
+            "official_url": "https://github.com/defuddle/defuddle",
+            "latest_version": "v1.0+"
+        },
+        "obsidian": {
+            **obsidian_check,
+            "name": "Obsidian & CLI",
+            "tag": "双链知识库",
+            "desc": "本地双链知识管理库与自动化 Markdown 归档支持。",
+            "required_for": "每日简报自动归档到本地 Obsidian Vault 并建立双链",
+            "install_cmd": "brew install obsidian && npm install -g obsidian-cli",
+            "official_url": "https://obsidian.md",
+            "latest_version": "v1.7+"
+        },
+        "agent_cli": {
+            **agent_cli_check,
+            "name": "Antigravity CLI (agy)",
+            "tag": "本地内置 Agent 核心",
+            "desc": "本机内置 Agent 调度与离线规则提炼引擎。",
+            "required_for": "未配置外置大模型 Key 时的零成本本地兜底提炼",
+            "install_cmd": "npm install -g @google/antigravity",
+            "official_url": "https://github.com/google/antigravity",
+            "latest_version": "v2.0+"
+        }
+    }
+
 @app.get("/api/obsidian-vaults")
 async def api_get_obsidian_vaults():
     vaults = get_obsidian_vaults()
