@@ -423,6 +423,67 @@ async def api_get_env_status():
         }
     }
 
+@app.post("/api/tools/update")
+async def api_update_tool(request: Request):
+    try:
+        data = await request.json()
+        tool_key = data.get("tool", "all")
+        
+        # Prepare environment PATH
+        env = os.environ.copy()
+        extra_paths = [
+            "/opt/homebrew/bin",
+            "/usr/local/bin",
+            os.path.expanduser("~/.local/bin"),
+            os.path.expanduser("~/.nvm/versions/node/v22.22.1/bin"),
+            os.path.expanduser("~/.bun/bin")
+        ]
+        nvm_dir = os.path.expanduser("~/.nvm/versions/node")
+        if os.path.exists(nvm_dir):
+            for entry in os.listdir(nvm_dir):
+                b = os.path.join(nvm_dir, entry, "bin")
+                if os.path.exists(b):
+                    extra_paths.append(b)
+        
+        for p in extra_paths:
+            if p not in env.get("PATH", "") and os.path.exists(p):
+                env["PATH"] = f"{p}:{env.get('PATH', '')}"
+
+        update_commands = {
+            "camoufox": "pip install --upgrade 'camoufox[geoip]' && camoufox fetch",
+            "defuddle": "npm install -g defuddle@latest",
+            "feishu": "npm install -g feishu-cli@latest",
+            "obsidian": "npm install -g obsidian-cli@latest",
+            "agentfeed": "git pull origin main",
+        }
+
+        if tool_key == "ego_browser":
+            import webbrowser
+            webbrowser.open("https://ego.fun")
+            return {
+                "success": True,
+                "tool": tool_key,
+                "output": "已自动在默认浏览器中打开 Ego Lite 官方下载页面 (https://ego.fun)，请下载最新版 DMG 安装包进行覆盖安装。"
+            }
+
+        if tool_key == "all":
+            cmd = "pip install --upgrade 'camoufox[geoip]' && camoufox fetch; npm install -g defuddle@latest feishu-cli@latest obsidian-cli@latest"
+        elif tool_key in update_commands:
+            cmd = update_commands[tool_key]
+        else:
+            return {"success": False, "tool": tool_key, "error": f"未知的组件类型: {tool_key}"}
+
+        res = subprocess.run(cmd, shell=True, env=env, capture_output=True, text=True, timeout=180)
+        output = (res.stdout or "") + "\n" + (res.stderr or "")
+        return {
+            "success": res.returncode == 0,
+            "tool": tool_key,
+            "output": output.strip() or "更新命令已执行完毕！",
+            "returncode": res.returncode
+        }
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
 @app.get("/api/obsidian-vaults")
 async def api_get_obsidian_vaults():
     vaults = get_obsidian_vaults()

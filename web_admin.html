@@ -83,6 +83,10 @@
             <i data-lucide="refresh-cw" class="w-3 h-3 text-indigo-400"></i>
             <span>重新检测</span>
           </button>
+          <button type="button" id="btn-update-all-top" onclick="updateTool('all', this)" class="text-xs bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg flex items-center space-x-1.5 transition cursor-pointer shadow-xs">
+            <i data-lucide="zap" class="w-3 h-3 text-amber-300"></i>
+            <span>⚡ 一键全量更新驱动</span>
+          </button>
           <button type="button" onclick="openToolingModal()" class="text-xs bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white px-3 py-1.5 rounded-lg flex items-center space-x-1.5 font-semibold shadow-xs transition cursor-pointer">
             <i data-lucide="download" class="w-3.5 h-3.5"></i>
             <span>📥 下载安装与最新版指南</span>
@@ -1414,12 +1418,30 @@
         <!-- Dynamically rendered detailed cards -->
       </div>
 
+      <!-- Live Command Execution Output Panel in Modal -->
+      <div id="tool-exec-log-panel" class="hidden bg-slate-900 border border-slate-800 rounded-xl p-3 text-xs font-mono text-slate-200 space-y-1.5 shrink-0 shadow-inner">
+        <div class="flex items-center justify-between text-slate-400 border-b border-slate-800 pb-1 text-[11px]">
+          <span class="flex items-center space-x-1 text-emerald-400 font-bold">
+            <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
+            <span id="tool-exec-log-title">终端更新执行日志</span>
+          </span>
+          <button type="button" onclick="document.getElementById('tool-exec-log-panel').classList.add('hidden')" class="text-slate-400 hover:text-white cursor-pointer"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+        </div>
+        <pre id="tool-exec-log-content" class="max-h-28 overflow-y-auto text-[11px] text-slate-300 whitespace-pre-wrap select-all font-mono"></pre>
+      </div>
+
       <!-- Modal Footer -->
       <div class="flex items-center justify-between pt-3 border-t border-slate-100 shrink-0">
         <span class="text-[11px] text-slate-400">所有底层驱动均 100% 开源安全，安装后点击「重新检测」即刻生效</span>
-        <button type="button" onclick="closeToolingModal()" class="text-xs bg-slate-900 hover:bg-slate-800 text-white font-semibold px-4 py-2 rounded-lg transition cursor-pointer">
-          完成
-        </button>
+        <div class="flex items-center space-x-2">
+          <button type="button" onclick="updateTool('all', this)" class="text-xs bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3.5 py-2 rounded-lg flex items-center space-x-1.5 transition cursor-pointer shadow-xs">
+            <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-300"></i>
+            <span>⚡ 一键全量升级所有驱动</span>
+          </button>
+          <button type="button" onclick="closeToolingModal()" class="text-xs bg-slate-900 hover:bg-slate-800 text-white font-semibold px-4 py-2 rounded-lg transition cursor-pointer">
+            完成
+          </button>
+        </div>
       </div>
 
     </div>
@@ -3637,6 +3659,10 @@
                 <span class="select-all truncate">${item.install_cmd}</span>
               </div>
               <div class="flex items-center space-x-2 shrink-0">
+                <button type="button" onclick="updateTool('${key}', this)" class="text-xs bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold px-3 py-1.5 rounded-lg flex items-center space-x-1.5 shadow-xs transition cursor-pointer">
+                  <i data-lucide="zap" class="w-3 h-3 text-amber-300"></i>
+                  <span>⚡ 一键更新</span>
+                </button>
                 <button type="button" onclick="copyToolCmd('${item.install_cmd}', this)" class="text-xs bg-white hover:bg-slate-100 text-slate-800 border border-slate-200 px-3 py-1.5 rounded-lg font-medium flex items-center space-x-1 transition cursor-pointer shadow-xs">
                   <i data-lucide="copy" class="w-3 h-3 text-slate-600"></i>
                   <span>复制命令</span>
@@ -3666,15 +3692,70 @@
           await navigator.clipboard.writeText(cmd);
         }
         const originalText = btn.innerHTML;
-        btn.innerHTML = `<i data-lucide="check" class="w-3 h-3 text-emerald-600"></i><span class="text-emerald-700 font-bold">已复制命令！</span>`;
+        btn.innerHTML = `<i data-lucide="check" class="w-3 h-3 text-emerald-600"></i><span class="text-emerald-700 font-bold">已复制！</span>`;
         lucide.createIcons();
-        showToast(`📋 已复制安装命令！请在终端 (Terminal) 中粘贴执行：\n${cmd}`);
+        showToast(`📋 已复制安装命令！请在终端中粘贴执行：\n${cmd}`);
         setTimeout(() => {
           btn.innerHTML = originalText;
           lucide.createIcons();
         }, 2500);
       } catch (e) {
         showToast("复制命令失败: " + e, "error");
+      }
+    }
+
+    async function updateTool(toolKey, btn = null) {
+      let originalHtml = '';
+      if (btn) {
+        originalHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = `<i data-lucide="loader-2" class="w-3 h-3 animate-spin text-amber-300"></i><span>正在自动更新...</span>`;
+        lucide.createIcons();
+      }
+
+      const logPanel = document.getElementById('tool-exec-log-panel');
+      const logTitle = document.getElementById('tool-exec-log-title');
+      const logContent = document.getElementById('tool-exec-log-content');
+
+      if (logPanel && logContent) {
+        logPanel.classList.remove('hidden');
+        logTitle.innerText = `正在更新组件: ${toolKey}...`;
+        logContent.innerText = `⚡ 正在执行 ${toolKey} 在线自动升级，请稍候...\n`;
+      }
+
+      showToast(`⚡ 正在为您在线更新 ${toolKey}，请稍候...`);
+
+      try {
+        const res = await fetch('/api/tools/update', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tool: toolKey })
+        });
+        const data = await res.json();
+
+        if (logContent) {
+          logContent.innerText += data.output || (data.success ? '✅ 更新执行完成！' : `❌ 异常: ${data.error}`);
+          logContent.scrollTop = logContent.scrollHeight;
+        }
+
+        if (data.success) {
+          showToast(`🎉 ${toolKey} 更新执行完毕！已自动重新探测版本。`);
+          await checkEnvStatus(false);
+          if (cachedEnvData && !document.getElementById('tooling-modal').classList.contains('hidden')) {
+            openToolingModal(toolKey);
+          }
+        } else {
+          showToast(`更新遇到问题: ${data.error || data.output}`, 'error');
+        }
+      } catch (e) {
+        if (logContent) logContent.innerText += `\n❌ 网络通信异常: ${e}`;
+        showToast(`更新请求异常: ${e}`, 'error');
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = originalHtml;
+          lucide.createIcons();
+        }
       }
     }
 
